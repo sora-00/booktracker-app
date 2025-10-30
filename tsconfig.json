@@ -1,12 +1,16 @@
 {
-  "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
-    "noImplicitAny": true
+    "noImplicitAny": true,
+    "jsx": "react-jsx",
+    "target": "es2017",
+    "downlevelIteration": true,
+    "moduleResolution": "node"
   },
   "include": [
     "**/*.ts",
     "**/*.tsx",
-    "types/env.d.ts"
+    "src/types/env.d.ts",
+    "nativewind-env.d.ts"
   ]
 }
