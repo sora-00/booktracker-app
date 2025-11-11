@@ -1,85 +1,86 @@
-import { useCallback, useMemo, useRef, useSyncExternalStore } from "react";
-import { InMemoryBookRepository, HttpBookRepository, BookRepository } from "../repositories/book";
-import { getApiBaseUrl, getDataSource } from "../utils/config";
-import { Book, NewBookInput, BookId } from "../entities/book";
+import { useState, useCallback } from "react";
+import { getBookList, postBook, deleteBook } from "../repositories/book";
+import type { Book, NewBookInput } from "../entities/book";
 
-type Subscriber = () => void;
-
-class BookStore {
-  private repository: BookRepository;
-  private books: Book[] = [];
-  private subscribers: Set<Subscriber> = new Set();
-
-  constructor(repository: BookRepository) {
-    this.repository = repository;
-  }
-
-  subscribe = (cb: Subscriber) => {
-    this.subscribers.add(cb);
-    return () => this.subscribers.delete(cb);
-  };
-
-  private notify = () => {
-    for (const cb of this.subscribers) cb();
-  };
-
-  getSnapshot = () => this.books;
-
-  initialize = async () => {
-    this.books = await this.repository.list();
-    this.notify();
-  };
-
-  add = async (input: NewBookInput) => {
-    const created = await this.repository.add(input);
-    this.books = [created, ...this.books];
-    this.notify();
-  };
-
-  update = async (id: BookId, input: Partial<NewBookInput>) => {
-    const updated = await this.repository.update(id, input);
-    this.books = this.books.map((b) => (b.id === id ? updated : b));
-    this.notify();
-  };
-
-  remove = async (id: BookId) => {
-    await this.repository.remove(id);
-    this.books = this.books.filter((b) => b.id !== id);
-    this.notify();
-  };
-}
-
-const createRepository = (): BookRepository => {
-  const source = getDataSource();
-  if (source === "http") {
-    const base = getApiBaseUrl();
-    console.log(`[BookRepo] dataSource=http baseUrl=${base}`);
-    return new HttpBookRepository(base);
-  }
-  console.log(`[BookRepo] dataSource=memory`);
-  return new InMemoryBookRepository();
-};
-
-const singletonStore = new BookStore(createRepository());
+export type RetUseBooks = ReturnType<typeof useBooks>;
 
 export function useBooks() {
-  const storeRef = useRef(singletonStore);
+  // TODO: 実際の認証トークンを取得する実装が必要
+  const accessToken = "";
 
-  const subscribe = useCallback((cb: Subscriber) => storeRef.current.subscribe(cb), []);
-  const getSnapshot = useCallback(() => storeRef.current.getSnapshot(), []);
-  const books = useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
+  const [isRemoving, setIsRemoving] = useState(false);
+  const [books, setBooks] = useState<Book[]>([]);
 
-  const actions = useMemo(
-    () => ({
-      initialize: storeRef.current.initialize,
-      add: storeRef.current.add,
-      update: storeRef.current.update,
-      remove: storeRef.current.remove,
-    }),
-    []
+  const refreshBooks = useCallback(async () => {
+    try {
+      const data = await getBookList(accessToken);
+      console.log('getBookList response:', data);
+      const bookList = Array.from(data);
+      console.log('bookList after Array.from:', bookList);
+      setBooks(bookList);
+      return bookList;
+    } catch (err) {
+      console.error('refreshBooks error:', err);
+      setBooks([]);
+      return [];
+    }
+  }, [accessToken]);
+
+  const getBooks = useCallback(async () => {
+    try {
+      const data = await getBookList(accessToken);
+      console.log('getBooks response:', data);
+      const bookList = Array.from(data);
+      console.log('getBooks bookList after Array.from:', bookList);
+      setBooks(bookList);
+      return bookList;
+    } catch (err) {
+      console.error('getBooks error:', err);
+      setBooks([]);
+      return [];
+    }
+  }, [accessToken]);
+
+  const addBook = useCallback(
+    async (input: NewBookInput) => {
+      setIsAdding(true);
+      try {
+        const data = await postBook(accessToken, input);
+        await refreshBooks();
+        setIsAdding(false);
+        return "";
+      } catch (err) {
+        setIsAdding(false);
+        return "本の追加に失敗しました";
+      }
+    },
+    [accessToken, refreshBooks]
   );
 
-  return { books, ...actions };
+  const removeBook = useCallback(
+    async (id: number) => {
+      setIsRemoving(true);
+      try {
+        await deleteBook(accessToken, id);
+        await refreshBooks();
+        setIsRemoving(false);
+      } catch (err) {
+        setIsRemoving(false);
+      }
+    },
+    [accessToken, refreshBooks]
+  );
+
+  return {
+    isLoading,
+    isAdding,
+    isRemoving,
+    books,
+    getBooks,
+    refreshBooks,
+    addBook,
+    removeBook,
+  };
 }
-
-

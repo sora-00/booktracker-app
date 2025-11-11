@@ -3,7 +3,17 @@
     "name": "booktracker-app",
     "slug": "booktracker-app",
     "version": "1.0.0",
+    "scheme": "booktracker-app",
     "orientation": "portrait",
+    "plugins": [
+      [
+        "expo-router",
+        {
+          "root": "./app",
+          "origin": false
+        }
+      ]
+    ],
     "icon": "./app/assets/img/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,

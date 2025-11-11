@@ -1,7 +1,6 @@
 import { Platform } from "react-native";
 import { API_BASE_URL_IOS, API_BASE_URL_DEVICE } from "@env";
-
-export type DataSource = "memory" | "http";
+import { DataSource } from "../types/config";
 
 export const getDataSource = (): DataSource => {
   const explicit = (process.env.EXPO_PUBLIC_DATA_SOURCE || process.env.DATA_SOURCE || "").toString();
