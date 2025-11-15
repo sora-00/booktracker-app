@@ -1,9 +1,11 @@
 import { View } from "react-native";
 
 type SpacerProps = {
-  height: number;
+	height: number;
 };
 
 export const Spacer = ({ height }: SpacerProps) => {
-  return <View style={{ height }} />;
+	return <View style={{ height }} />;
 };
+
+
