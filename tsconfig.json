@@ -5,12 +5,18 @@
     "jsx": "react-jsx",
     "target": "es2017",
     "downlevelIteration": true,
-    "moduleResolution": "node"
+    "moduleResolution": "bundler",
+    "baseUrl": ".",
+    "paths": {
+      "@ui/*": ["app/ui/*"],
+      "@mods/*": ["mods/*"]
+    }
   },
   "include": [
     "**/*.ts",
     "**/*.tsx",
     "src/types/env.d.ts",
     "nativewind-env.d.ts"
-  ]
+  ],
+  "extends": "expo/tsconfig.base"
 }

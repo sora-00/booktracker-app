@@ -7,6 +7,14 @@ module.exports = function (api) {
           moduleName: '@env',
           path: '.env.development',
         }],
+        ['module-resolver', {
+          root: ['./'],
+          alias: {
+            '@ui': './app/ui',
+            '@mods': './mods',
+          },
+          extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
+        }],
         'nativewind/babel'
       ],
     };
