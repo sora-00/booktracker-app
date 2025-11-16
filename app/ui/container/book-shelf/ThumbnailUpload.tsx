@@ -34,7 +34,7 @@ export function ThumbnailUpload({ displayImageUri, isUploading, onUpload }: Prop
 					)}
 				</View>
 			) : (
-				<View className="w-1/3">
+				<View className="w-full">
 					<RoundedButton
 						icon={<Ionicons name="camera" size={24} color="white" />}
 						onPress={onUpload}
