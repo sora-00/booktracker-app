@@ -3,6 +3,7 @@ import { View, Pressable as RawPressable, StyleSheet, Dimensions } from "react-n
 import { Portal } from "@gorhom/portal";
 import Animated, { FadeIn, FadeOut, SlideInDown, SlideOutDown, Easing } from "react-native-reanimated";
 import { colors } from "./colors";
+import { useOverlay } from "../hooks/useOverlay";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -91,29 +92,4 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 20,
 	},
 });
-
-// ---
-
-export function useOverlay() {
-	const [isShow, setIsShow] = React.useState(false);
-
-	const open = () => {
-		setIsShow(true);
-	};
-
-	const close = () => {
-		setIsShow(false);
-	};
-
-	const toggle = useCallback(() => {
-		setIsShow((prev) => !prev);
-	}, []);
-
-	return {
-		isShow,
-		open,
-		close,
-		toggle,
-	};
-}
 
