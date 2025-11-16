@@ -5,7 +5,7 @@ import { colors, type TextColor } from "./colors";
 type TextSize = "big" | "title1" | "title2" | "body1" | "body2";
 type TextWeight = "normal" | "bold";
 
-type TextProps = Omit<RNTextProps, "style" | "className"> & {
+type TextProps = {
 	size: TextSize;
 	color?: TextColor;
 	weight?: TextWeight;
@@ -41,20 +41,14 @@ const weightStyles = StyleSheet.create({
 	bold: { fontFamily: "ZenMaruGothic-Bold" },
 });
 
-export const Text = ({
-	size,
-	color = "black",
-	weight = "normal",
-	children,
-	...props
-}: TextProps) => {
+export function Text(props: TextProps) : React.ReactElement {
+	const { size, color = "black", weight = "normal", children } = props;
 	return (
-		<RNText
-			style={[sizeStyles[size], colorStyles[color], weightStyles[weight]]}
-			{...props}
+		<RNText 
+			style={[sizeStyles[size], colorStyles[color], weightStyles[weight]]} 
 		>
 			{children}
 		</RNText>
 	);
-};
+}
 
