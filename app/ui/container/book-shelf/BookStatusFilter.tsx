@@ -1,9 +1,7 @@
 import { View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { StatusIconButton } from "../../common/StatusIconButton";
-import type { Status } from "@mods/entities/status";
-
-export type FilterStatus = "all" | Status;
+import type { FilterStatus } from "@mods/types/book-shelf/filter";
 
 type Props = {
 	selectedFilter: FilterStatus;
