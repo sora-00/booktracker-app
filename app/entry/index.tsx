@@ -1,6 +1,7 @@
 import { View } from "react-native";
 import { Link } from "expo-router";
 import { Text } from "@ui/common/Text";
+import { rTabsBookshelf } from "@mods/routes";
 
 export default function EntryScreen() {
   return (
@@ -8,7 +9,7 @@ export default function EntryScreen() {
       <View style={{ marginBottom: 20 }}>
         <Text size="big">認証前画面</Text>
       </View>
-      <Link href="/bookshelf">
+      <Link href={rTabsBookshelf()}>
         <Text size="body1" color="black">
           ホームへ進む（認証済み）
         </Text>

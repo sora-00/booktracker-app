@@ -3,7 +3,7 @@ import { Image as RNImage, ImageProps as RNImageProps } from "react-native";
 type ImageSize = "thumbnail" | "small" | "medium" | "large";
 type ImageVariant = "rounded-md" | "rounded-lg" | "rounded-full" | "square";
 
-type ImageProps = Omit<RNImageProps, "style" | "className"> & {
+type ImageProps = Omit<RNImageProps,"className"> & {
 	size: ImageSize;
 	variant: ImageVariant;
 };
@@ -25,6 +25,7 @@ const variantStyles: Record<ImageVariant, string> = {
 export const Image = ({
 	size = "thumbnail",
 	variant = "rounded-md",
+	style,
 	...props
 }: ImageProps) => {
 	const classes = [
@@ -35,6 +36,6 @@ export const Image = ({
 		.filter(Boolean)
 		.join(" ");
 
-	return <RNImage className={classes} {...props} />;
+	return <RNImage className={classes} style={style} {...props} />;
 };
 

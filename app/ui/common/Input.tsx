@@ -1,28 +1,63 @@
-import { TextInput, TextInputProps, StyleSheet } from "react-native";
+import { TextInput, TextInputProps, View } from "react-native";
+import { useEffect } from "react";
 import { colors } from "./colors";
-import { textSizes } from "./Text";
+import { textSizes, Text } from "./Text";
 
-const styles = StyleSheet.create({
-	input: {
-		borderWidth: 1,
-		borderColor: colors.input.border,
-		backgroundColor: colors.input.background,
-		borderRadius: 60,
-		paddingHorizontal: 16,
-		paddingVertical: 12,
-		fontSize: textSizes.body1,
-		fontFamily: "ZenMaruGothic-Regular",
-	},
-});
-
-export const Input = (props: TextInputProps) => {
-  return (
-  <TextInput 
-  {...props} 
-  placeholderTextColor={colors.text.gray} 
-			style={[styles.input, props.style]}
-		/>
-  );
+type Props = TextInputProps & {
+	title?: string;
+	placeholder?: string;
+	errorMessage?: string;
+	validation?: (value: string) => string | undefined;
+	onValidationChange?: (hasError: boolean) => void;
 };
+
+export function Input(props: Props) {
+	const { errorMessage, validation, onValidationChange, value, ...textInputProps } = props;
+	
+	// バリデーションを実行
+	const validationError = validation && value ? validation(value) : undefined;
+	const displayError = errorMessage || validationError;
+	
+	// バリデーション状態の変化を親に通知
+	useEffect(() => {
+		if (onValidationChange && validation) {
+			onValidationChange(Boolean(validationError));
+		}
+	}, [validationError, onValidationChange, validation]);
+	
+	return (
+		<View className="flex flex-col gap-1 items-start w-full">
+			{props.title && (
+			<View className="flex justify-start items-start">
+				<Text size="body1" color="black">{props.title}</Text>
+			</View>
+			)}
+			<View 
+				className="w-full border rounded-[20px] py-3 px-4"
+				style={{
+					borderColor: colors.input.border,
+					backgroundColor: colors.input.background,
+				}}
+			>
+				<TextInput 
+					{...textInputProps}
+					value={value}
+					placeholder={props.placeholder}
+					placeholderTextColor={colors.text.gray}
+					multiline={props.multiline}
+					style={{
+						fontSize: textSizes.body1,
+						fontFamily: "ZenMaruGothic-Regular",
+					}}
+				/>
+			</View>
+			{displayError && (
+				<View className="px-4">
+					<Text size="body2" color="red">{displayError}</Text>
+				</View>
+			)}
+		</View>
+	);
+}
 
 

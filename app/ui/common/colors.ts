@@ -8,6 +8,7 @@ export const colors = {
 		white: "#FFFFFF",
 		accent: "#F9A007",
 		gray: "#9D9D9D",
+		red: "#EF4444",
 	},
 	// 背景色
 	background: {
