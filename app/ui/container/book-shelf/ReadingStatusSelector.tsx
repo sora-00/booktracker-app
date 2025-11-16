@@ -13,7 +13,7 @@ type Props = {
 const statusConfig: Record<Status, { icon: keyof typeof Ionicons.glyphMap; label: string }> = {
 	unread: { icon: "library", label: "未読" },
 	reading: { icon: "walk", label: "読み途中" },
-	completed: { icon: "trophy", label: "読了" },
+	completed: { icon: "trophy", label: "読破" },
 };
 
 export function ReadingStatusSelector({ status, onStatusChange }: Props) {

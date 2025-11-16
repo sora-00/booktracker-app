@@ -155,7 +155,7 @@ export default function BookForm(props: Props) {
 					</View>
 					<View className="w-1/2">
 						<DateInput
-							title="目標読了日"
+							title="目標読破日"
 							value={props.targetCompleteDate}
 							onChange={props.onChangeTargetCompleteDate}
 						/>

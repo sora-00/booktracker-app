@@ -93,7 +93,7 @@ export const mockBooks: Book[] = [
     },
     {
         id: 6,
-        title: "読了の本です",
+        title: "読破済みの本です",
         author: "adovfij",
         totalPages: 0,
         publisher: "",

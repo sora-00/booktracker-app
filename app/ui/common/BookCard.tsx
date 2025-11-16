@@ -90,7 +90,7 @@ export function BookCard({ book }: Props) {
 				<View className="flex-row items-end justify-between">
 					{/* 日付情報 */}
 					<View className="">
-						{/* 読了済みの場合は完読日、それ以外は目標読了日 */}
+						{/* 読破済みの場合は完読日、それ以外は目標読破日 */}
 						{book.status === "completed" && book.completedDate ? (
 							<View className="flex-row items-center">
 								<Ionicons name="trophy" size={16} color={colors.main.accent} />

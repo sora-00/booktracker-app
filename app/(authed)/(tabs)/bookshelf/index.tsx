@@ -29,7 +29,7 @@ export default function BookshelfScreen() {
 		getBooks();
 	}, [getBooks]);
 
-	// 目標読了日が変更されたときに目標ページ数/日を自動計算
+	// 目標読破日が変更されたときに目標ページ数/日を自動計算
 	useEffect(() => {
 		if (formTargetCompleteDate && formTotalPages) {
 			const calculatedPagesPerDay = calculatePagesPerDay(
