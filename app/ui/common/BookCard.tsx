@@ -23,7 +23,7 @@ export function BookCard({ book }: Props) {
 			case "unread":
 				return (
 					<View className="items-center justify-center">
-						<Ionicons name="library-outline" size={40} color={colors.main.accent} />
+						<Ionicons name="library" size={40} color={colors.main.accent} />
 					</View>
 				);
 			case "reading":
@@ -37,7 +37,7 @@ export function BookCard({ book }: Props) {
 			case "completed":
 				return (
 					<View className="items-center justify-center">
-						<Ionicons name="checkmark" size={50} color={colors.main.accent} />
+						<Ionicons name="trophy" size={40} color={colors.main.accent} />
 					</View>
 				);
 			default:
@@ -89,7 +89,7 @@ export function BookCard({ book }: Props) {
 				{/* 日付情報とステータスアイコン（下、横並び） */}
 				<View className="flex-row items-end justify-between">
 					{/* 日付情報 */}
-					<View className="gap-y-1">
+					<View className="">
 						{/* 目標読了日 */}
 						<View className="flex-row items-center">
 							<Ionicons name="flag" size={16} color={colors.main.accent} />

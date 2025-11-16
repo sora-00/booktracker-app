@@ -1,9 +1,12 @@
 import { ScrollView, View, StyleSheet, Pressable } from "react-native";
+import { useState } from "react";
 import { BookCard } from "../../common/BookCard";
 import { Spacer } from "../../common/Spacer";
 import { BottomModal } from "../../common/BottomModal";
 import { useOverlay } from "../../hooks/useOverlay";
 import BookForm from "./BookForm";
+import { BookStatusFilter } from "./BookStatusFilter";
+import type { FilterStatus } from "@mods/types/book-shelf/filter";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../../common/colors";
 import type { Status } from "@mods/entities/status";
@@ -60,6 +63,7 @@ export default function BookShelf({
 	onFormAdd,
 }: Props) {
 	const modalOverlay = useOverlay();
+	const [selectedFilter, setSelectedFilter] = useState<FilterStatus>("all");
 
 	console.log("books (デバッグ用):", books);
 	console.log("books.length:", books.length);
@@ -72,11 +76,21 @@ export default function BookShelf({
 		modalOverlay.close();
 	};
 
+	// ステータスに基づいて本をフィルタリング
+	const filteredBooks = selectedFilter === "all" 
+		? books 
+		: books.filter((book) => book.status === selectedFilter);
+
 	return (
-		<View className="flex-1">
-			<ScrollView>
-				<Spacer height={30} />
-				{books.map((book) => (
+		<View className="flex-1 items-center">
+			<Spacer height={10} />
+			<BookStatusFilter
+				selectedFilter={selectedFilter}
+				onFilterChange={setSelectedFilter}
+			/>
+			<Spacer height={20} />
+			<ScrollView showsVerticalScrollIndicator={false}>
+				{filteredBooks.map((book) => (
 					<View key={book.id}>
 						<BookCard book={book} />
 						<Spacer height={20} />
