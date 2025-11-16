@@ -3,6 +3,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Platform } from "react-native";
 import { useEffect } from "react";
 import { useFonts } from "expo-font";
+import { PortalProvider, PortalHost } from "@gorhom/portal";
 import { initApiFetcher } from "../mods/repositories/cli/client";
 import { getApiBaseUrl } from "../mods/utils/config";
 import type { FetcherInterceptor } from "../mods/utils/api-fetcher/config";
@@ -50,7 +51,11 @@ export default function RootLayout() {
 
   return (
     <SafeAreaProvider>
-      <Slot />
+      <PortalProvider>
+        <Slot />
+        <PortalHost name="modal" />
+        <PortalHost name="date-picker" />
+      </PortalProvider>
     </SafeAreaProvider>
   );
 }
