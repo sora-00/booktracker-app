@@ -1,37 +1,39 @@
-import { Pressable, StyleSheet, View } from "react-native";
+import { Pressable, View } from "react-native";
 import { ReactNode } from "react";
 import { Text } from "./Text";
 import { colors } from "./colors";
 
-type ButtonProps = {
-  title: string;
-  children?: ReactNode;
+type Props = {
+  title?: string;
   onPress: () => void;
   disabled?: boolean;
-};
+  icon?: ReactNode;
+}
 
-export const Button = ({ title, children, onPress, disabled }: ButtonProps) => {
+export function RoundedButton(props: Props) {
+  const hasIcon = Boolean(props.icon);
+  const hasTitle = Boolean(props.title);
+  
+  // titleがあればtitleを優先、なければiconを表示
+  const showTitle = hasTitle;
+  const showIcon = hasIcon && !hasTitle;
+  
   return (
-    <View className=" flex items-center"> 
-    <Pressable
-      onPress={onPress}
-      disabled={disabled}
-      style={[
-
-				{
-					backgroundColor: disabled ? colors.main.secondary : colors.main.primary,
-					alignItems: "center",
-					justifyContent: "center",
-          paddingVertical: 12,
-          paddingHorizontal: 140,
-          borderRadius: 24,
-				},
-			]}
-    >
-			<Text size="title1" color="white" weight="bold">
-				{children ?? title}
-			</Text>
-		</Pressable>
+    <View className="w-full"> 
+      <Pressable 
+        onPress={props.onPress} 
+        disabled={props.disabled} 
+        className="items-center justify-center py-3 rounded-[24px] w-full"
+        style={{ 
+          backgroundColor: props.disabled ? colors.main.secondary : colors.main.primary,
+          paddingHorizontal: showIcon ? 16 : 24,
+        }}
+      >
+        {showIcon && props.icon}
+        {showTitle && (
+          <Text size="title1" color="white" weight="bold">{props.title}</Text>
+        )}
+      </Pressable>
     </View>
 	);
 };
