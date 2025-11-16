@@ -53,7 +53,7 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <PortalProvider>
         <Slot />
-        <PortalHost name="modal" />
+        <PortalHost name="book-form" />
         <PortalHost name="date-picker" />
       </PortalProvider>
     </SafeAreaProvider>
