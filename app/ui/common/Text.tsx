@@ -33,6 +33,7 @@ const colorStyles = StyleSheet.create({
 	white: { color: colors.text.white },
 	accent: { color: colors.text.accent },
 	gray: { color: colors.text.gray },
+	red: { color: colors.text.red },
 });
 
 const weightStyles = StyleSheet.create({
