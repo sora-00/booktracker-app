@@ -22,7 +22,6 @@ export function ThumbnailUpload({ displayImageUri, isUploading, onUpload }: Prop
 						<Pressable onPress={onUpload} disabled={isUploading}>
 							<Image
 								source={{ uri: displayImageUri }}
-								size="large"
 								variant="rounded-md"
 								style={{ width: 100, height: 140, resizeMode: "cover" }}
 							/>
