@@ -29,7 +29,7 @@ export function ReadingStatusSelector({ status, onStatusChange }: Props) {
 						<StatusIconButton
 							key={statusKey}
 							icon={config.icon}
-							size={25}
+							size={40}
 							isSelected={isSelected}
 							onPress={() => onStatusChange(statusKey)}
 							label={config.label}
