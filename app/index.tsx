@@ -1,8 +1,9 @@
 import { Redirect } from "expo-router";
+import { rTabsBookshelf } from "@mods/routes";
 
 export default function Index() {
   // 初期ルート: 認証済みホームにリダイレクト
   // 将来的に認証状態に応じて分岐する
-  return <Redirect href="/bookshelf" />;
+  return <Redirect href={rTabsBookshelf()} />;
 }
 
