@@ -44,3 +44,24 @@ export const getOneMonthLaterDate = (): string => {
 	return formatDate(oneMonthLater);
 };
 
+/**
+ * YYYY-MM-DD形式の日付をYYYY/MM/DD形式に変換
+ */
+export const formatDateSlash = (dateString: string): string => {
+	if (!dateString) return "";
+	const [year, month, day] = dateString.split("-");
+	return `${year}/${month}/${day}`;
+};
+
+/**
+ * ISO8601形式の日付文字列からYYYY/MM/DD形式の日付を取得
+ */
+export const getDateFromISO = (isoString: string): string => {
+	if (!isoString) return "";
+	const date = new Date(isoString);
+	const year = date.getFullYear();
+	const month = String(date.getMonth() + 1).padStart(2, "0");
+	const day = String(date.getDate()).padStart(2, "0");
+	return `${year}/${month}/${day}`;
+};
+
