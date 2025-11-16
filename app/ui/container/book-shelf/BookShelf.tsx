@@ -6,8 +6,8 @@ import { useOverlay } from "../../hooks/useOverlay";
 import BookForm from "./BookForm";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../../common/colors";
-import type { Book } from "@mods/entities/book";
-import type { ReadingStatus } from "./ReadingStatusSelector";
+import type { Status } from "@mods/entities/status";
+import type { Book } from "@mods/entities";
 
 type Props = {
 	books: Book[];
@@ -16,9 +16,9 @@ type Props = {
 	formAuthor: string;
 	formTotalPages: string;
 	formPublisher: string;
-	formThumbnailUrl?: string;
 	formBackground: string;
-	formReadingStatus: ReadingStatus;
+	formThumbnailUrl?: string;
+	formReadingStatus: Status;
 	formTargetCompleteDate: string;
 	formCompletedPages: string;
 	formTargetPagesPerDay: string;
@@ -27,9 +27,9 @@ type Props = {
 	onChangeFormTotalPages: (value: string) => void;
 	onChangeFormPublisher: (value: string) => void;
 	onChangeFormBackground: (value: string) => void;
-	onFormReadingStatusChange: (status: ReadingStatus) => void;
-	onChangeFormTargetCompleteDate: (value: string) => void;
 	onFormThumbnailUrlChange: (url: string | undefined) => void;
+	onFormReadingStatusChange: (status: Status) => void;
+	onChangeFormTargetCompleteDate: (value: string) => void;
 	onChangeFormCompletedPages: (value: string) => void;
 	onChangeFormTargetPagesPerDay: (value: string) => void;
 	onFormAdd: () => void;
@@ -41,8 +41,8 @@ export default function BookShelf({
 	formAuthor,
 	formTotalPages,
 	formPublisher,
-	formThumbnailUrl,
 	formBackground,
+	formThumbnailUrl,
 	formReadingStatus,
 	formTargetCompleteDate,
 	formCompletedPages,
@@ -52,9 +52,9 @@ export default function BookShelf({
 	onChangeFormTotalPages,
 	onChangeFormPublisher,
 	onChangeFormBackground,
+	onFormThumbnailUrlChange,
 	onFormReadingStatusChange,
 	onChangeFormTargetCompleteDate,
-	onFormThumbnailUrlChange,
 	onChangeFormCompletedPages,
 	onChangeFormTargetPagesPerDay,
 	onFormAdd,
@@ -74,18 +74,18 @@ export default function BookShelf({
 
 	return (
 		<View className="flex-1">
-			<ScrollView className="flex-1">
-				<View className="gap-3">
-					<Spacer height={30} />
-					{books.map((book) => (
-						<BookCard key={book.id} book={book} />
-					))}
-					<Spacer height={24} />
-				</View>
+			<ScrollView>
+				<Spacer height={30} />
+				{books.map((book) => (
+					<View key={book.id}>
+						<BookCard book={book} />
+						<Spacer height={20} />
+					</View>
+				))}
 			</ScrollView>
 			
 			{/* 右下のプラスボタン */}
-			<Pressable style={styles.fab} onPress={modalOverlay.open}>
+			<Pressable style={styles.addButton} onPress={modalOverlay.open}>
 				<Ionicons name="add" size={32} color="white" />
 			</Pressable>
 
@@ -96,8 +96,8 @@ export default function BookShelf({
 					author={formAuthor}
 					totalPages={formTotalPages}
 					publisher={formPublisher}
-					thumbnailUrl={formThumbnailUrl}
 					background={formBackground}
+					thumbnailUrl={formThumbnailUrl}
 					readingStatus={formReadingStatus}
 					targetCompleteDate={formTargetCompleteDate}
 					completedPages={formCompletedPages}
@@ -107,9 +107,9 @@ export default function BookShelf({
 					onChangeTotalPages={onChangeFormTotalPages}
 					onChangePublisher={onChangeFormPublisher}
 					onChangeBackground={onChangeFormBackground}
+					onThumbnailUrlChange={onFormThumbnailUrlChange}
 					onReadingStatusChange={onFormReadingStatusChange}
 					onChangeTargetCompleteDate={onChangeFormTargetCompleteDate}
-					onThumbnailUrlChange={onFormThumbnailUrlChange}
 					onChangeCompletedPages={onChangeFormCompletedPages}
 					onChangeTargetPagesPerDay={onChangeFormTargetPagesPerDay}
 					onAdd={handleFormAdd}
@@ -120,7 +120,7 @@ export default function BookShelf({
 }
 
 const styles = StyleSheet.create({
-	fab: {
+	addButton: {
 		position: "absolute",
 		bottom: 24,
 		right: 10,

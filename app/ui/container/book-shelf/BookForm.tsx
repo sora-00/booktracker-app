@@ -7,17 +7,27 @@ import { useImageUploads } from "@ui/hooks/useImageUploads";
 import { ThumbnailUpload } from "./ThumbnailUpload";
 import { Divider } from "@ui/common/Divider";
 import { Text } from "@ui/common/Text";
-import { ReadingStatusSelector, type ReadingStatus } from "./ReadingStatusSelector";
+import { ReadingStatusSelector } from "./ReadingStatusSelector";
+import type { Status } from "@mods/entities/status";
 import { DateInput } from "./DateInput";
+import {
+	validateTitle,
+	validateAuthor,
+	validateTotalPages,
+	validatePublisher,
+	validateBackground,
+	validateCompletedPages,
+	validateTargetPagesPerDay,
+} from "../../utils/validation";
 
 type Props = {
 	title: string;
 	author: string;
 	totalPages: string;
 	publisher: string;
-	thumbnailUrl?: string;
 	background: string;
-	readingStatus: ReadingStatus;
+	thumbnailUrl?: string;
+	readingStatus: Status;
 	targetCompleteDate: string;
 	completedPages: string;
 	targetPagesPerDay: string;
@@ -26,9 +36,9 @@ type Props = {
 	onChangeTotalPages: (value: string) => void;
 	onChangePublisher: (value: string) => void;
 	onChangeBackground: (value: string) => void;
-	onReadingStatusChange: (status: ReadingStatus) => void;
-	onChangeTargetCompleteDate: (value: string) => void;
 	onThumbnailUrlChange: (url: string | undefined) => void;
+	onReadingStatusChange: (status: Status) => void;
+	onChangeTargetCompleteDate: (value: string) => void;
 	onChangeCompletedPages: (value: string) => void;
 	onChangeTargetPagesPerDay: (value: string) => void;
 	onAdd: () => void;
@@ -50,74 +60,6 @@ export default function BookForm(props: Props) {
 	useEffect(() => {
 		props.onThumbnailUrlChange(uploadedData?.url);
 	}, [uploadedData?.url]);
-
-	// バリデーション関数
-	const validateTitle = (value: string): string | undefined => {
-		if (value.length > 40) {
-			return "40字以内で入力してください";
-		}
-		return undefined;
-	};
-
-	const validateAuthor = (value: string): string | undefined => {
-		if (value.length > 20) {
-			return "20字以内で入力してください";
-		}
-		return undefined;
-	};
-
-	const validateTotalPages = (value: string): string | undefined => {
-		if (value.length === 0) {
-			return undefined;
-		}
-		if (!/^\d+$/.test(value)) {
-			return "数字で入力してください";
-		}
-		if (value.length > 4) {
-			return "4桁以内で入力してください";
-		}
-		return undefined;
-	};
-
-	const validatePublisher = (value: string): string | undefined => {
-		if (value.length > 20) {
-			return "20字以内で入力してください";
-		}
-		return undefined;
-	};
-
-	const validateBackground = (value: string): string | undefined => {
-		if (value.length > 200) {
-			return "200字以内で入力してください";
-		}
-		return undefined;
-	};
-
-	const validateCompletedPages = (value: string): string | undefined => {
-		if (value.length === 0) {
-			return undefined;
-		}
-		if (!/^\d+$/.test(value)) {
-			return "数字で入力してください";
-		}
-		if (value.length > 4) {
-			return "4桁以内で入力してください";
-		}
-		return undefined;
-	};
-
-	const validateTargetPagesPerDay = (value: string): string | undefined => {
-		if (value.length === 0) {
-			return undefined;
-		}
-		if (!/^\d+$/.test(value)) {
-			return "数字で入力してください";
-		}
-		if (value.length > 4) {
-			return "4桁以内で入力してください";
-		}
-		return undefined;
-	};
 
 	// バリデーションエラーがあるかどうか
 	const hasValidationError = titleError || authorError || totalPagesError || publisherError || backgroundError || completedPagesError || targetPagesPerDayError;

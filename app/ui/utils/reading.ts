@@ -72,3 +72,14 @@ export const calculateTargetCompleteDate = (
 	return formatDate(targetDate);
 };
 
+/**
+ * 進捗率を計算（%）
+ * @param completedPages 読み終わったページ数
+ * @param totalPages 総ページ数
+ * @returns 進捗率（0-100の整数）
+ */
+export const calculateProgress = (completedPages: number, totalPages: number): number => {
+	if (!totalPages || totalPages === 0) return 0;
+	return Math.round((completedPages / totalPages) * 100);
+};
+

@@ -1,18 +1,11 @@
-import { Image as RNImage, ImageProps as RNImageProps } from "react-native";
+import { Image as RNImage, ImageSourcePropType, ImageStyle, StyleProp } from "react-native";
 
-type ImageSize = "thumbnail" | "small" | "medium" | "large";
 type ImageVariant = "rounded-md" | "rounded-lg" | "rounded-full" | "square";
 
-type ImageProps = Omit<RNImageProps,"className"> & {
-	size: ImageSize;
-	variant: ImageVariant;
-};
-
-const sizeStyles: Record<ImageSize, string> = {
-	thumbnail: "w-13 h-16",
-	small: "w-16 h-20",
-	medium: "w-24 h-32",
-	large: "w-32 h-40",
+type ImageProps = {
+	source: ImageSourcePropType;
+	variant?: ImageVariant;
+	style?: StyleProp<ImageStyle>;
 };
 
 const variantStyles: Record<ImageVariant, string> = {
@@ -23,19 +16,17 @@ const variantStyles: Record<ImageVariant, string> = {
 };
 
 export const Image = ({
-	size = "thumbnail",
+	source,
 	variant = "rounded-md",
 	style,
-	...props
 }: ImageProps) => {
 	const classes = [
-		sizeStyles[size],
 		variantStyles[variant],
 		"bg-gray-100",
 	]
 		.filter(Boolean)
 		.join(" ");
 
-	return <RNImage className={classes} style={style} {...props} />;
+	return <RNImage className={classes} source={source} style={style} />;
 };
 

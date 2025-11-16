@@ -3,15 +3,14 @@ import { Ionicons } from "@expo/vector-icons";
 import { colors } from "@ui/common/colors";
 import { Text } from "@ui/common/Text";
 import { Spacer } from "@ui/common/Spacer";
-
-export type ReadingStatus = "unread" | "reading" | "completed";
+import type { Status } from "@mods/entities/status";
 
 type Props = {
-	status: ReadingStatus;
-	onStatusChange: (status: ReadingStatus) => void;
+	status: Status;
+	onStatusChange: (status: Status) => void;
 };
 
-const statusConfig: Record<ReadingStatus, { icon: keyof typeof Ionicons.glyphMap; label: string }> = {
+const statusConfig: Record<Status, { icon: keyof typeof Ionicons.glyphMap; label: string }> = {
 	unread: { icon: "library-outline", label: "未読" },
 	reading: { icon: "walk-outline", label: "読み途中" },
 	completed: { icon: "checkmark-outline", label: "読了" },
@@ -23,7 +22,7 @@ export function ReadingStatusSelector({ status, onStatusChange }: Props) {
 			<Text size="body1" color="black">読書ステータス</Text>
 			<Spacer height={5} />
 			<View className="flex flex-row gap-3">
-				{(Object.keys(statusConfig) as ReadingStatus[]).map((statusKey) => {
+				{(Object.keys(statusConfig) as Status[]).map((statusKey) => {
 					const config = statusConfig[statusKey];
 					const isSelected = status === statusKey;
 					return (

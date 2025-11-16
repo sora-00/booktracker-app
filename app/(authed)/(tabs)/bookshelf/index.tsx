@@ -2,21 +2,25 @@ import { useEffect, useState, useCallback } from "react";
 import { useBooks } from "@mods/hooks/useBooks";
 import BookShelf from "@ui/container/book-shelf/BookShelf";
 import { Container } from "@ui/common/Container";
-import type { ReadingStatus } from "@ui/container/book-shelf/ReadingStatusSelector";
+import type { Status } from "@mods/entities/status";
 import { calculatePagesPerDay } from "@ui/utils/reading";
 import { getOneMonthLaterDate } from "@ui/utils/date";
+import { mockBooks } from "@mods/types/mock/book";
 
 export default function BookshelfScreen() {
 	const { books, getBooks, addBook } = useBooks();
+	
+	// 一時的にモックデータを使用
+	const displayBooks = mockBooks;
 	
 	// BookForm用の状態管理
 	const [formTitle, setFormTitle] = useState("");
 	const [formAuthor, setFormAuthor] = useState("");
 	const [formTotalPages, setFormTotalPages] = useState("");
 	const [formPublisher, setFormPublisher] = useState("");
-	const [formThumbnailUrl, setFormThumbnailUrl] = useState<string | undefined>(undefined);
 	const [formBackground, setFormBackground] = useState("");
-	const [formReadingStatus, setFormReadingStatus] = useState<ReadingStatus>("unread");
+	const [formThumbnailUrl, setFormThumbnailUrl] = useState<string | undefined>(undefined);
+	const [formReadingStatus, setFormReadingStatus] = useState<Status>("unread");
 	const [formTargetCompleteDate, setFormTargetCompleteDate] = useState(getOneMonthLaterDate());
 	const [formCompletedPages, setFormCompletedPages] = useState("");
 	const [formTargetPagesPerDay, setFormTargetPagesPerDay] = useState("");
@@ -47,7 +51,14 @@ export default function BookshelfScreen() {
 		const errorMessage = await addBook({ 
 			title: formTitle.trim(), 
 			author: formAuthor.trim(),
-			thumbnailUrl: formThumbnailUrl,
+			totalPages: formTotalPages ? parseInt(formTotalPages) : 0,
+			publisher: formPublisher,
+			background: formBackground || undefined,
+			thumbnailUrl: formThumbnailUrl || undefined,
+			status: formReadingStatus,
+			targetCompleteDate: formTargetCompleteDate,
+			completedPages: formCompletedPages ? parseInt(formCompletedPages) : 0,
+			targetPagesPerDay: formTargetPagesPerDay ? parseInt(formTargetPagesPerDay) : 0,
 		});
 		if (errorMessage) {
 			console.error("追加に失敗しました:", errorMessage);
@@ -59,8 +70,8 @@ export default function BookshelfScreen() {
 		setFormAuthor("");
 		setFormTotalPages("");
 		setFormPublisher("");
-		setFormThumbnailUrl(undefined);
 		setFormBackground("");
+		setFormThumbnailUrl(undefined);
 		setFormReadingStatus("unread");
 		setFormTargetCompleteDate(getOneMonthLaterDate());
 		setFormCompletedPages("");
@@ -70,13 +81,13 @@ export default function BookshelfScreen() {
 	return (
         <Container>
             <BookShelf
-                books={books}
+                books={displayBooks}
                 formTitle={formTitle}
                 formAuthor={formAuthor}
                 formTotalPages={formTotalPages}
                 formPublisher={formPublisher}
-                formThumbnailUrl={formThumbnailUrl}
                 formBackground={formBackground}
+                formThumbnailUrl={formThumbnailUrl}
                 formReadingStatus={formReadingStatus}
                 formTargetCompleteDate={formTargetCompleteDate}
                 formCompletedPages={formCompletedPages}
@@ -86,9 +97,9 @@ export default function BookshelfScreen() {
                 onChangeFormTotalPages={setFormTotalPages}
                 onChangeFormPublisher={setFormPublisher}
                 onChangeFormBackground={setFormBackground}
+                onFormThumbnailUrlChange={setFormThumbnailUrl}
                 onFormReadingStatusChange={setFormReadingStatus}
                 onChangeFormTargetCompleteDate={setFormTargetCompleteDate}
-                onFormThumbnailUrlChange={setFormThumbnailUrl}
                 onChangeFormCompletedPages={setFormCompletedPages}
                 onChangeFormTargetPagesPerDay={setFormTargetPagesPerDay}
                 onFormAdd={handleFormAdd}
