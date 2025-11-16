@@ -1,8 +1,8 @@
 import { parseDate, formatDate } from "./date";
 
 /**
- * 目標読了日から目標ページ数/日を計算
- * @param targetCompleteDate 目標読了日（YYYY-MM-DD形式）
+ * 目標読破日から目標ページ数/日を計算
+ * @param targetCompleteDate 目標読破日（YYYY-MM-DD形式）
  * @param totalPages 総ページ数
  * @param completedPages 読み終わったページ数
  * @returns 目標ページ数/日（計算できない場合はnull）
@@ -38,11 +38,11 @@ export const calculatePagesPerDay = (
 };
 
 /**
- * 目標ページ数/日から目標読了日を計算
+ * 目標ページ数/日から目標読破日を計算
  * @param targetPagesPerDay 目標ページ数/日
  * @param totalPages 総ページ数
  * @param completedPages 読み終わったページ数
- * @returns 目標読了日（YYYY-MM-DD形式、計算できない場合はnull）
+ * @returns 目標読破日（YYYY-MM-DD形式、計算できない場合はnull）
  */
 export const calculateTargetCompleteDate = (
 	targetPagesPerDay: string,

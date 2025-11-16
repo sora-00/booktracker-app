@@ -10,6 +10,7 @@ export type Book = {
   thumbnailUrl?: string;
   status: Status;
   targetCompleteDate: string;
+  completedDate?: string; // 読破日（YYYY-MM-DD形式、読破時のみ）
   completedPages: number;
   targetPagesPerDay: number;
   createdAt: string; // ISO8601

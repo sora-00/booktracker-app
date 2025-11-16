@@ -90,15 +90,26 @@ export function BookCard({ book }: Props) {
 				<View className="flex-row items-end justify-between">
 					{/* 日付情報 */}
 					<View className="">
-						{/* 目標読了日 */}
-						<View className="flex-row items-center">
-							<Ionicons name="flag" size={16} color={colors.main.accent} />
-							<View className="pl-1">
-								<Text size="body1" color="black">
-									{formatDateSlash(book.targetCompleteDate)}
-								</Text>
+						{/* 読破済みの場合は完読日、それ以外は目標読破日 */}
+						{book.status === "completed" && book.completedDate ? (
+							<View className="flex-row items-center">
+								<Ionicons name="trophy" size={16} color={colors.main.accent} />
+								<View className="pl-1">
+									<Text size="body1" color="black">
+										{formatDateSlash(book.completedDate)}
+									</Text>
+								</View>
 							</View>
-						</View>
+						) : (
+							<View className="flex-row items-center">
+								<Ionicons name="flag" size={16} color={colors.main.accent} />
+								<View className="pl-1">
+									<Text size="body1" color="black">
+										{formatDateSlash(book.targetCompleteDate)}
+									</Text>
+								</View>
+							</View>
+						)}
 				
 						{/* 登録日 */}
 						<View className="flex-row items-center">

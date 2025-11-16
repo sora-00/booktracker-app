@@ -1,4 +1,5 @@
-import { View, ScrollView } from "react-native";
+import { View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useEffect, useState } from "react";
 import { Input } from "@ui/common/Input";
 import { RoundedButton } from "@ui/common/RoundedButton";
@@ -66,7 +67,15 @@ export default function BookForm(props: Props) {
 
 	return (
 		<View className="flex flex-1 flex-col w-full">
-			<ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+			<KeyboardAwareScrollView
+				showsVerticalScrollIndicator={false}
+				keyboardShouldPersistTaps="handled"
+				enableOnAndroid={true}
+				enableResetScrollToCoords={false}
+				scrollToOverflowEnabled={true}
+				enableAutomaticScroll={true}
+				extraScrollHeight={0}
+			>
 				<Spacer height={10} />
 				<View className="w-full flex justify-center items-center">
 					<Text size="title1" color="black">本を新規登録</Text>
@@ -92,9 +101,9 @@ export default function BookForm(props: Props) {
 					/>
 				</View>
 				<Spacer height={20} />
-				<View className="flex flex-row items-start">
-					<View className="w-1/2">
-						<View className="w-3/4">
+				<View className="flex flex-row justify-between">
+					<View className="w-1/2 flex ">
+						<View className="pr-10">
 							<Input 
 								title="総ページ数" 
 								value={props.totalPages} 
@@ -105,7 +114,7 @@ export default function BookForm(props: Props) {
 							/>
 						</View>
 						<Spacer height={20} />
-						<View className="w-3/4">
+						<View className="pr-10">
 							<Input 
 								title="出版社" 
 								value={props.publisher} 
@@ -115,11 +124,13 @@ export default function BookForm(props: Props) {
 							/>
 						</View>
 					</View>
-					<ThumbnailUpload
-						displayImageUri={displayImageUri}
-						isUploading={isUploading}
-						onUpload={upload}
-					/>
+					<View className="w-1/2">
+						<ThumbnailUpload
+							displayImageUri={displayImageUri}
+							isUploading={isUploading}
+							onUpload={upload}
+						/>
+					</View>
 				</View>
 				<Spacer height={20} />
 				<Divider />
@@ -144,7 +155,7 @@ export default function BookForm(props: Props) {
 					</View>
 					<View className="w-1/2">
 						<DateInput
-							title="目標読了日"
+							title="目標読破日"
 							value={props.targetCompleteDate}
 							onChange={props.onChangeTargetCompleteDate}
 						/>
@@ -153,7 +164,7 @@ export default function BookForm(props: Props) {
 				<Spacer height={20} />
 				<View className="flex-row w-full">
 					<View className="w-1/2">
-						<View className="w-3/4">
+						<View className="pr-10">
 							<Input
 								title="読み終わったページ"
 								value={props.completedPages}
@@ -166,7 +177,7 @@ export default function BookForm(props: Props) {
 					</View>
 					<Spacer height={20} />
 					<View className="w-1/2">
-						<View className="w-3/4">
+						<View className="pr-10">
 							<Input 
 								title="目標ページ数/日" 
 								value={props.targetPagesPerDay} 
@@ -178,8 +189,8 @@ export default function BookForm(props: Props) {
 						</View>
 					</View>
 				</View>
-				<Spacer height={20} />
-			</ScrollView>
+				<Spacer height={45} />
+			</KeyboardAwareScrollView>
 			<View className="w-full">
 				<RoundedButton title="追加" onPress={props.onAdd} disabled={hasValidationError} />
 			</View>
