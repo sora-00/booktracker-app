@@ -1,4 +1,4 @@
-import { ScrollView, View, StyleSheet, Pressable } from "react-native";
+import { ScrollView, View } from "react-native";
 import { useState } from "react";
 import { BookCard } from "../../common/BookCard";
 import { Spacer } from "../../common/Spacer";
@@ -6,9 +6,8 @@ import { BottomModal } from "../../common/BottomModal";
 import { useOverlay } from "../../hooks/useOverlay";
 import BookForm from "./BookForm";
 import { BookStatusFilter } from "./BookStatusFilter";
+import { AddButton } from "../../common/AddButton";
 import type { FilterStatus } from "@mods/types/book-shelf/filter";
-import { Ionicons } from "@expo/vector-icons";
-import { colors } from "../../common/colors";
 import type { Status } from "@mods/entities/status";
 import type { Book } from "@mods/entities";
 
@@ -20,7 +19,7 @@ type Props = {
 	formTotalPages: string;
 	formPublisher: string;
 	formBackground: string;
-	formThumbnailUrl?: string;
+	formThumbnailUrl: string;
 	formReadingStatus: Status;
 	formTargetCompleteDate: string;
 	formCompletedPages: string;
@@ -30,7 +29,7 @@ type Props = {
 	onChangeFormTotalPages: (value: string) => void;
 	onChangeFormPublisher: (value: string) => void;
 	onChangeFormBackground: (value: string) => void;
-	onFormThumbnailUrlChange: (url: string | undefined) => void;
+	onFormThumbnailUrlChange: (url: string) => void;
 	onFormReadingStatusChange: (status: Status) => void;
 	onChangeFormTargetCompleteDate: (value: string) => void;
 	onChangeFormCompletedPages: (value: string) => void;
@@ -96,12 +95,11 @@ export default function BookShelf({
 						<Spacer height={20} />
 					</View>
 				))}
+				<Spacer height={100} />
 			</ScrollView>
 			
 			{/* 右下のプラスボタン */}
-			<Pressable style={styles.addButton} onPress={modalOverlay.open}>
-				<Ionicons name="add" size={32} color="white" />
-			</Pressable>
+			<AddButton onPress={modalOverlay.open} />
 
 			{/* BottomModalでBookFormを表示 */}
 			<BottomModal overlay={modalOverlay} portalName="book-form" height="full">
@@ -132,27 +130,3 @@ export default function BookShelf({
 		</View>
 	);
 }
-
-const styles = StyleSheet.create({
-	addButton: {
-		position: "absolute",
-		bottom: 24,
-		right: 10,
-		width: 64,
-		height: 64,
-		borderRadius: 32,
-		backgroundColor: colors.main.primary,
-		alignItems: "center",
-		justifyContent: "center",
-		shadowColor: "#000",
-		shadowOffset: {
-			width: 0,
-			height: 2,
-		},
-		shadowOpacity: 0.25,
-		shadowRadius: 3.84,
-		elevation: 5,
-	},
-});
-
-

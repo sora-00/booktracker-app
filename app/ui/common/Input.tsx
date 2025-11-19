@@ -9,10 +9,11 @@ type Props = TextInputProps & {
 	errorMessage?: string;
 	validation?: (value: string) => string | undefined;
 	onValidationChange?: (hasError: boolean) => void;
+	minHeight?: number;
 };
 
 export function Input(props: Props) {
-	const { errorMessage, validation, onValidationChange, value, ...textInputProps } = props;
+	const { errorMessage, validation, onValidationChange, value, minHeight, ...textInputProps } = props;
 	
 	// バリデーションを実行
 	const validationError = validation && value ? validation(value) : undefined;
@@ -48,6 +49,7 @@ export function Input(props: Props) {
 					style={{
 						fontSize: textSizes.body1,
 						fontFamily: "ZenMaruGothic-Regular",
+						minHeight: minHeight,
 					}}
 				/>
 			</View>

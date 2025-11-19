@@ -19,7 +19,7 @@ export default function BookshelfScreen() {
 	const [formTotalPages, setFormTotalPages] = useState("");
 	const [formPublisher, setFormPublisher] = useState("");
 	const [formBackground, setFormBackground] = useState("");
-	const [formThumbnailUrl, setFormThumbnailUrl] = useState<string | undefined>(undefined);
+	const [formThumbnailUrl, setFormThumbnailUrl] = useState("");
 	const [formReadingStatus, setFormReadingStatus] = useState<Status>("unread");
 	const [formTargetCompleteDate, setFormTargetCompleteDate] = useState(getOneMonthLaterDate());
 	const [formCompletedPages, setFormCompletedPages] = useState("");
@@ -53,8 +53,8 @@ export default function BookshelfScreen() {
 			author: formAuthor.trim(),
 			totalPages: formTotalPages ? parseInt(formTotalPages) : 0,
 			publisher: formPublisher,
-			background: formBackground || undefined,
-			thumbnailUrl: formThumbnailUrl || undefined,
+			background: formBackground || "",
+			thumbnailUrl: formThumbnailUrl,
 			status: formReadingStatus,
 			targetCompleteDate: formTargetCompleteDate,
 			completedPages: formCompletedPages ? parseInt(formCompletedPages) : 0,
@@ -71,7 +71,7 @@ export default function BookshelfScreen() {
 		setFormTotalPages("");
 		setFormPublisher("");
 		setFormBackground("");
-		setFormThumbnailUrl(undefined);
+		setFormThumbnailUrl("");
 		setFormReadingStatus("unread");
 		setFormTargetCompleteDate(getOneMonthLaterDate());
 		setFormCompletedPages("");

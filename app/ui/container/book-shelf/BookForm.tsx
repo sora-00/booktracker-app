@@ -27,7 +27,7 @@ type Props = {
 	totalPages: string;
 	publisher: string;
 	background: string;
-	thumbnailUrl?: string;
+	thumbnailUrl: string;
 	readingStatus: Status;
 	targetCompleteDate: string;
 	completedPages: string;
@@ -37,7 +37,7 @@ type Props = {
 	onChangeTotalPages: (value: string) => void;
 	onChangePublisher: (value: string) => void;
 	onChangeBackground: (value: string) => void;
-	onThumbnailUrlChange: (url: string | undefined) => void;
+	onThumbnailUrlChange: (url: string) => void;
 	onReadingStatusChange: (status: Status) => void;
 	onChangeTargetCompleteDate: (value: string) => void;
 	onChangeCompletedPages: (value: string) => void;
@@ -59,7 +59,7 @@ export default function BookForm(props: Props) {
 	
 	// 画像URLが変更されたら親コンポーネントに通知
 	useEffect(() => {
-		props.onThumbnailUrlChange(uploadedData?.url);
+		props.onThumbnailUrlChange(uploadedData?.url || "");
 	}, [uploadedData?.url]);
 
 	// バリデーションエラーがあるかどうか
@@ -192,7 +192,8 @@ export default function BookForm(props: Props) {
 				<Spacer height={45} />
 			</KeyboardAwareScrollView>
 			<View className="w-full">
-				<RoundedButton title="追加" onPress={props.onAdd} disabled={hasValidationError} />
+				<RoundedButton title="追加" onPress={props.onAdd} 
+				disabled={ !props.title || !props.author || !props.totalPages || !props.publisher || !props.background || !props.readingStatus || !props.targetCompleteDate || !props.completedPages || !props.targetPagesPerDay || hasValidationError} />
 			</View>
 		</View>
 	);

@@ -5,6 +5,8 @@ import type { Book } from "@mods/entities";
 const mock1Image = require("../../../app/assets/img/mock/mock1.png");
 const mock2Image = require("../../../app/assets/img/mock/mock2.png");
 const mock3Image = require("../../../app/assets/img/mock/mock3.png");
+const mock4Image = require("../../../app/assets/img/mock/mock4.png");
+const mock5Image = require("../../../app/assets/img/mock/mock5.png");
 
 /**
  * BookCard表示用の拡張型
@@ -47,7 +49,7 @@ export const mockBooks: Book[] = [
 	},
 	{
 		id: 3,
-		title: "りんごかもしれないいいいいいいいいい",
+		title: "りんごかもしれない",
 		author: "中野信子",
 		totalPages: 500,
 		publisher: "",
@@ -63,12 +65,12 @@ export const mockBooks: Book[] = [
 	},
     {
         id: 4,
-        title: "読み途中の本",
-        author: "wwwwwww",
-        totalPages: 0,
+        title: "すばらしい医学",
+        author: "山本健人",
+        totalPages: 500,
         publisher: "",
         background: "",
-        thumbnailUrl: undefined,
+        thumbnailUrl: mock4Image,
         status: "reading",
         targetCompleteDate: "",
         completedPages: 0,
@@ -78,12 +80,12 @@ export const mockBooks: Book[] = [
     },
     {
         id: 5,
-        title: "未読の本です",
-        author: "asdewadf",
+        title: "成瀬は天下を取りに行く成瀬は天下を取りに行く",
+        author: "宮島未奈",
         totalPages: 0,
         publisher: "",
         background: "",
-        thumbnailUrl: undefined,
+        thumbnailUrl: mock5Image,
         status: "unread",
         targetCompleteDate: "",
         completedPages: 0,
