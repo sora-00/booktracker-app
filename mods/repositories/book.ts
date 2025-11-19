@@ -5,6 +5,7 @@ type Resp = {
   getBookList: ReadonlyArray<Book>;
   getBook: Book;
   postBook: Book;
+  putBook: Book;
   deleteBook: void;
 };
 
@@ -30,7 +31,16 @@ export async function postBook(accessToken: string, input: NewBookInput) {
     method: "POST",
     path: `/books`,
     accessToken,
-    body: { title: input.title, author: input.author },
+    body: { input },
+  });
+}
+
+export async function putBook(accessToken: string, id: number, input: Partial<NewBookInput>) {
+  return await fetcher.fetchJson<Resp["putBook"]>({
+    method: "PUT",
+    path: `/books/${id}`,
+    accessToken,
+    body: { input },
   });
 }
 
