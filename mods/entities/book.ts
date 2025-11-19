@@ -6,8 +6,8 @@ export type Book = {
   author: string;
   totalPages: number;
   publisher: string;
-  background?: string;
-  thumbnailUrl?: string;
+  background: string;
+  thumbnailUrl: string;
   status: Status;
   targetCompleteDate: string;
   completedDate?: string; // 読破日（YYYY-MM-DD形式、読破時のみ）
@@ -22,8 +22,8 @@ export type NewBookInput = {
   author: string;
   totalPages: number;
   publisher: string;
-  background?: string;
-  thumbnailUrl?: string;
+  background: string;
+  thumbnailUrl: string;
   status: Status;
   targetCompleteDate: string;
   completedPages: number;
