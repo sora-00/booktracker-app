@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { getBookList, postBook, deleteBook } from "../repositories/book";
+import { getBookList, postBook, putBook, deleteBook } from "../repositories/book";
 import type { Book, NewBookInput } from "../entities/book";
 
 export type RetUseBooks = ReturnType<typeof useBooks>;
@@ -59,6 +59,19 @@ export function useBooks() {
     [accessToken, refreshBooks]
   );
 
+  const updateBook = useCallback(
+    async (id: number, input: Partial<NewBookInput>) => {
+      try {
+        const data = await putBook(accessToken, id, input);
+        await refreshBooks();
+        return "";
+      } catch (err) {
+        return "本の更新に失敗しました";
+      }
+    },
+    [accessToken, refreshBooks]
+  );
+
   const removeBook = useCallback(
     async (id: number) => {
       setIsRemoving(true);
@@ -81,6 +94,7 @@ export function useBooks() {
     getBooks,
     refreshBooks,
     addBook,
+    updateBook,
     removeBook,
   };
 }
