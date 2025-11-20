@@ -193,7 +193,7 @@ export default function BookForm(props: Props) {
 			</KeyboardAwareScrollView>
 			<View className="w-full">
 				<RoundedButton title="追加" onPress={props.onAdd} 
-				disabled={ !props.title || !props.author || hasValidationError} />
+				disabled={ !props.title || !props.author || !props.totalPages || !props.publisher || !props.background || !props.readingStatus || !props.targetCompleteDate || !props.completedPages || !props.targetPagesPerDay || hasValidationError} />
 			</View>
 		</View>
 	);
