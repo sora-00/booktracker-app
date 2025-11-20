@@ -10,7 +10,7 @@ module.exports = function (api) {
         ['module-resolver', {
           root: ['./'],
           alias: {
-            '@ui': './app/ui',
+            '@ui': './mods/ui',
             '@mods': './mods',
           },
           extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],

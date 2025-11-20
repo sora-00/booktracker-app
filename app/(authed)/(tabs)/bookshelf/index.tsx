@@ -11,7 +11,7 @@ export default function BookshelfScreen() {
 	const { books, getBooks, addBook, removeBook } = useBooks();
 	
 	// 一時的にモックデータを使用
-	const displayBooks = mockBooks;
+	const displayBooks = books;
 	
 	// BookForm用の状態管理
 	const [formTitle, setFormTitle] = useState("");

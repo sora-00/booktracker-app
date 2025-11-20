@@ -31,7 +31,7 @@ export async function postBook(accessToken: string, input: NewBookInput) {
     method: "POST",
     path: `/books`,
     accessToken,
-    body: { input },
+    body: input,
   });
 }
 
@@ -40,7 +40,7 @@ export async function putBook(accessToken: string, id: number, input: Partial<Ne
     method: "PUT",
     path: `/books/${id}`,
     accessToken,
-    body: { input },
+    body: input,
   });
 }
 

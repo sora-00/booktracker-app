@@ -1,7 +1,6 @@
 import type { Book } from "@mods/entities";
 
 // 画像をインポート
-// app/ui/container/book-shelf/ から app/assets/img/ への正しい相対パス
 const mock1Image = require("../../../app/assets/img/mock/mock1.png");
 const mock2Image = require("../../../app/assets/img/mock/mock2.png");
 const mock3Image = require("../../../app/assets/img/mock/mock3.png");
