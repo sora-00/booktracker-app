@@ -31,7 +31,7 @@ export async function postLog(accessToken: string, input: NewLogInput) {
     method: "POST",
     path: `/logs`,
     accessToken,
-    body: { input },
+    body: input,
   });
 }
 
@@ -44,7 +44,7 @@ export async function putLog(
     method: "PUT",
     path: `/logs/${id}`,
     accessToken,
-    body: { input },
+    body: input,
   });
 }
 
