@@ -35,6 +35,7 @@ type Props = {
 	onChangeFormCompletedPages: (value: string) => void;
 	onChangeFormTargetPagesPerDay: (value: string) => void;
 	onFormAdd: () => void;
+	onDeleteBook?: (bookId: number) => void;
 };
 
 export default function BookShelf({
@@ -60,6 +61,7 @@ export default function BookShelf({
 	onChangeFormCompletedPages,
 	onChangeFormTargetPagesPerDay,
 	onFormAdd,
+	onDeleteBook,
 }: Props) {
 	const modalOverlay = useOverlay();
 	const [selectedFilter, setSelectedFilter] = useState<FilterStatus>("all");
@@ -91,7 +93,7 @@ export default function BookShelf({
 			<ScrollView showsVerticalScrollIndicator={false}>
 				{filteredBooks.map((book) => (
 					<View key={book.id}>
-						<BookCard book={book} />
+						<BookCard book={book} onDeleteBook={onDeleteBook} />
 						<Spacer height={20} />
 					</View>
 				))}

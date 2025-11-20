@@ -8,7 +8,7 @@ import { getOneMonthLaterDate } from "@ui/utils/date";
 import { mockBooks } from "@mods/types/mock/book";
 
 export default function BookshelfScreen() {
-	const { books, getBooks, addBook } = useBooks();
+	const { books, getBooks, addBook, removeBook } = useBooks();
 	
 	// 一時的にモックデータを使用
 	const displayBooks = mockBooks;
@@ -99,11 +99,12 @@ export default function BookshelfScreen() {
                 onChangeFormBackground={setFormBackground}
                 onFormThumbnailUrlChange={setFormThumbnailUrl}
                 onFormReadingStatusChange={setFormReadingStatus}
-                onChangeFormTargetCompleteDate={setFormTargetCompleteDate}
-                onChangeFormCompletedPages={setFormCompletedPages}
-                onChangeFormTargetPagesPerDay={setFormTargetPagesPerDay}
-                onFormAdd={handleFormAdd}
-            />
+				onChangeFormTargetCompleteDate={setFormTargetCompleteDate}
+				onChangeFormCompletedPages={setFormCompletedPages}
+				onChangeFormTargetPagesPerDay={setFormTargetPagesPerDay}
+				onFormAdd={handleFormAdd}
+				onDeleteBook={removeBook}
+			/>
         </Container>
 	);
 }
