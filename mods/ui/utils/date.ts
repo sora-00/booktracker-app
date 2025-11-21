@@ -65,3 +65,21 @@ export const getDateFromISO = (isoString: string): string => {
 	return `${year}/${month}/${day}`;
 };
 
+/**
+ * 目標読了日までの残り日数を計算
+ * @param targetDate 目標読了日（YYYY-MM-DD形式）
+ * @returns 残り日数（負の値の場合は0を返す）
+ */
+export const calculateRemainingDays = (targetDate: string): number => {
+	if (!targetDate) return 0;
+	const today = new Date();
+	today.setHours(0, 0, 0, 0);
+	const target = parseDate(targetDate);
+	target.setHours(0, 0, 0, 0);
+	
+	const diffTime = target.getTime() - today.getTime();
+	const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+	
+	return diffDays > 0 ? diffDays : 0;
+};
+
