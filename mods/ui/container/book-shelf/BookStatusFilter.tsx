@@ -6,6 +6,7 @@ import type { FilterStatus } from "@mods/types/book-shelf/filter";
 type Props = {
 	selectedFilter: FilterStatus;
 	onFilterChange: (filter: FilterStatus) => void;
+	availableFilters?: FilterStatus[];
 };
 
 const filterConfig: Record<FilterStatus, { icon: keyof typeof Ionicons.glyphMap }> = {
@@ -15,13 +16,15 @@ const filterConfig: Record<FilterStatus, { icon: keyof typeof Ionicons.glyphMap 
 	completed: { icon: "trophy" },
 };
 
-export function BookStatusFilter({ selectedFilter, onFilterChange }: Props) {
+export function BookStatusFilter({ selectedFilter, onFilterChange, availableFilters }: Props) {
+	const filtersToShow = availableFilters ?? (Object.keys(filterConfig) as FilterStatus[]);
+	
 	return (
 		<View
 			className="flex-row justify-space-between items-center"
             style={{ gap: 15 }}
 		>
-			{(Object.keys(filterConfig) as FilterStatus[]).map((filterKey) => {
+			{filtersToShow.map((filterKey) => {
 				const config = filterConfig[filterKey];
 				const isSelected = selectedFilter === filterKey;
 				return (

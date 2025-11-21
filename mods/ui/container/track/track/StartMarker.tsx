@@ -3,14 +3,14 @@ import { Text } from "../../../common/Text";
 import { Image } from "../../../common/Image";
 import { FLAG_SIZE, MARK_SIZE } from "../types/constants";
 
-const starFlagPng = require("../../../../../app/assets/img/icon/starflag.png");
-const markPng = require("../../../../../app/assets/img/icon/mark.png");
-
 type StartMarkerProps = {
 	top: number;
 	date?: string;
 	startX: number;
 };
+
+const starFlagPng = require("../../../../../app/assets/img/icon/starflag.png");
+const markPng = require("../../../../../app/assets/img/icon/mark.png");
 
 export function StartMarker({ date, startX }: StartMarkerProps) {
 	return (

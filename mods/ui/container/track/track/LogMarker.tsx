@@ -3,13 +3,13 @@ import { Text } from "../../../common/Text";
 import { Image } from "../../../common/Image";
 import { FLAG_SIZE, MARK_SIZE } from "../types/constants";
 
-const logFlagPng = require("../../../../../app/assets/img/icon/logflag.png");
-const markPng = require("../../../../../app/assets/img/icon/mark.png");
-
 type LogMarkerProps = {
 	x: number;
 	date: string;
 };
+
+const logFlagPng = require("../../../../../app/assets/img/icon/logflag.png");
+const markPng = require("../../../../../app/assets/img/icon/mark.png");
 
 export function LogMarker({ x, date }: LogMarkerProps) {
 	// const progressX = 

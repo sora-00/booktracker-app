@@ -3,14 +3,14 @@ import { Text } from "../../../common/Text";
 import { Image } from "../../../common/Image";
 import { FLAG_SIZE, MARK_SIZE } from "../types/constants";
 
-const goalFlagPng = require("../../../../../app/assets/img/icon/goalflag.png");
-const markPng = require("../../../../../app/assets/img/icon/mark.png");
-
 type GoalMarkerProps = {
 	x: number;
 	top: number;
 	date?: string;
 };
+
+const goalFlagPng = require("../../../../../app/assets/img/icon/goalflag.png");
+const markPng = require("../../../../../app/assets/img/icon/mark.png");
 
 export function GoalMarker({ x, date }: GoalMarkerProps) {
 	return (
