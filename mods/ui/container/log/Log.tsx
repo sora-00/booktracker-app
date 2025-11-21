@@ -6,10 +6,15 @@ import LogForm from "./LogForm";
 import { AddButton } from "../../common/AddButton";
 import { Text } from "../../common/Text";
 import { LogCard } from "./LogCard";
-import type { Book, Log } from "@mods/entities";
 import { BookStatusFilter } from "../book-shelf/BookStatusFilter";
 import { useState } from "react";
-import { FilterStatus } from "@mods/types/book-shelf/filter";
+import type { Book, Log } from "@mods/entities";
+import type { LogFilterStatus } from "@mods/types/log";
+
+type LogWithBook = {
+	log: Log;
+	book: Book;
+};
 
 type Props = {
 	logs: Log[];
@@ -53,18 +58,30 @@ export default function Log({
 		modalOverlay.close();
 	};
 
-	const [selectedFilter, setSelectedFilter] = useState<FilterStatus>("all");
+	const [selectedFilter, setSelectedFilter] = useState<LogFilterStatus>("all");
 
 	// LogとBookをマッピング
-	const logsWithBooks = logs.map((log) => {
-		const book = books.find((b) => b.id === log.bookId);
-		return { log, book };
-	}).filter((item) => item.book !== undefined) as Array<{ log: Log; book: Book }>;
+	const logsWithBooks: LogWithBook[] = logs
+		.map((log) => {
+			const book = books.find((b) => b.id === log.bookId);
+			if (!book) {
+				return null;
+			}
+			return { log, book };
+		})
+		.filter((item): item is LogWithBook => item !== null);
 
 	// フィルタリング（本のstatusでフィルタ）
 	const filteredLogsWithBooks = selectedFilter === "all" 
 		? logsWithBooks 
 		: logsWithBooks.filter((item) => item.book.status === selectedFilter);
+
+	// createdAtで降順ソート（新しい順）
+	const sortedLogsWithBooks = [...filteredLogsWithBooks].sort((a, b) => {
+		const dateA = new Date(a.log.createdAt).getTime();
+		const dateB = new Date(b.log.createdAt).getTime();
+		return dateB - dateA;
+	});
 
 	return (
 		<View className="flex-1 items-center">
@@ -72,11 +89,12 @@ export default function Log({
 			<BookStatusFilter
 				selectedFilter={selectedFilter}
 				onFilterChange={setSelectedFilter}
+				availableFilters={["all", "reading", "completed"]}
 			/>
 			<Spacer height={20} />
 			<ScrollView showsVerticalScrollIndicator={false} className="flex-1 w-full">
-				{filteredLogsWithBooks.length > 0 ? (
-					filteredLogsWithBooks.map(({ log, book }) => (
+				{sortedLogsWithBooks.length > 0 ? (
+					sortedLogsWithBooks.map(({ log, book }) => (
 						<View key={log.id}>
 							<LogCard
 								log={log}
