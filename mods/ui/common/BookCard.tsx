@@ -13,9 +13,10 @@ import type { Book } from "@mods/entities";
 type Props = {
   book: Book;
   onDeleteBook?: (bookId: number) => void;
+  onPress?: (book: Book) => void;
 };
 
-export function BookCard({ book, onDeleteBook }: Props) {
+export function BookCard({ book, onDeleteBook, onPress }: Props) {
 	const [showMenu, setShowMenu] = useState(false);
 	const progress = book.totalPages && book.completedPages !== undefined
 		? calculateProgress(book.completedPages, book.totalPages)
@@ -37,6 +38,12 @@ export function BookCard({ book, onDeleteBook }: Props) {
 				},
 			},
 		]);
+	};
+
+	const handleCardPress = () => {
+		if (onPress) {
+			onPress(book);
+		}
 	};
 
 	// statusに応じた右側の表示
@@ -69,7 +76,8 @@ export function BookCard({ book, onDeleteBook }: Props) {
 
 	return (
 		<View className="relative">
-			<View
+			<Pressable
+				onPress={handleCardPress}
 				className="flex-row py-3 px-4 rounded-xl border border-gray-200 shadow-sm w-full justify-between"
 				style={{ backgroundColor: colors.background.card }}
 			>
@@ -158,7 +166,7 @@ export function BookCard({ book, onDeleteBook }: Props) {
 						</View>
 					</View>
 				</View>
-			</View>
+			</Pressable>
 
 			{/* メニューポップアップ（本を削除） */}
 			{showMenu && (

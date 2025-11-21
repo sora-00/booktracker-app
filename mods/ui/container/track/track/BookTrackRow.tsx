@@ -1,7 +1,6 @@
 import { View } from "react-native";
 import type { Book } from "@mods/entities/book";
 import { ProgressTrack } from "./ProgressTrack";
-
 import { StartMarker } from "./StartMarker";
 import { THUMBNAIL_SIZE_HEIGHT, TRACK_WIDTH } from "../types/constants";
 import { formatDateSlash } from "../../../utils/date";
@@ -9,15 +8,16 @@ import { LogMarker } from "./LogMarker";
 import { GoalMarker } from "./GoalMarker";
 import { Spacer } from "../../../common/Spacer";
 import type { BookWithLogs } from "../types";
+import type { Log } from "@mods/entities/log";
 
 type BookTrackRowProps = {
 	book: BookWithLogs;
 	startX: number;
 	endX: number;
-	onPress: (book: BookWithLogs) => void;
+	onSelectLog: (book: BookWithLogs, log: Log) => void;
 };
 
-export function BookTrackRow({ book, startX, endX, onPress }: BookTrackRowProps) {
+export function BookTrackRow({ book, startX, endX, onSelectLog }: BookTrackRowProps) {
 	// ページ数からx座標を計算
 	const getXFromPage = (book: Book, page: number): number => {
 		if (book.totalPages === 0) return startX;
@@ -42,7 +42,14 @@ export function BookTrackRow({ book, startX, endX, onPress }: BookTrackRowProps)
 
 				{logsSorted.map((log) => {
 					const flagX = getXFromPage(book, log.endPage);
-					return <LogMarker key={log.id} x={flagX} date={formatDateSlash(log.readDate)} />;
+					return (
+						<LogMarker
+							key={log.id}
+							x={flagX}
+							date={formatDateSlash(log.readDate)}
+							onPress={() => onSelectLog(book, log)}
+						/>
+					);
 				})}
 
 				<GoalMarker x={endX} top={trackTop} date={formatDateSlash(goalDate)} />

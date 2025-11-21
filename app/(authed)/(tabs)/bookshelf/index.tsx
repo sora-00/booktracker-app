@@ -1,17 +1,27 @@
 import { useEffect, useState, useCallback } from "react";
 import { useBooks } from "@mods/hooks/useBooks";
+import { useLogs } from "@mods/hooks/useLogs";
 import BookShelf from "@ui/container/book-shelf/BookShelf";
 import { Container } from "@ui/common/Container";
 import type { Status } from "@mods/entities/status";
 import { calculatePagesPerDay } from "@ui/utils/reading";
 import { getOneMonthLaterDate } from "@ui/utils/date";
 import { mockBooks } from "@mods/types/mock/book";
+import { mockLogs } from "@mods/types/mock/log";
+import { useOverlay } from "@ui/hooks/useOverlay";
+import { BookDetailModal } from "@ui/container/book-shelf/BookDetailModal";
+import type { Book } from "@mods/entities/book";
 
 export default function BookshelfScreen() {
-	const { books, getBooks, addBook, removeBook } = useBooks();
+	const { books, getBooks, addBook, removeBook, updateBook } = useBooks();
+	const { removeLog, updateLog } = useLogs();
 	
 	// 一時的にモックデータを使用
 	const displayBooks = mockBooks;
+	const displayLogs = mockLogs;
+	
+	const [selectedBook, setSelectedBook] = useState<Book | null>(null);
+	const bookDetailOverlay = useOverlay();
 	
 	// BookForm用の状態管理
 	const [formTitle, setFormTitle] = useState("");
@@ -78,6 +88,53 @@ export default function BookshelfScreen() {
 		setFormTargetPagesPerDay("");
 	}, [addBook, formTitle, formAuthor, formThumbnailUrl]);
 
+	const handleSelectBook = useCallback((book: Book) => {
+		setSelectedBook(book);
+		bookDetailOverlay.open();
+	}, [bookDetailOverlay]);
+
+	const handleCloseBookDetail = useCallback(() => {
+		bookDetailOverlay.close();
+	}, [bookDetailOverlay]);
+
+	const handleUpdateBookBackground = useCallback(async (bookId: number, background: string) => {
+		if (updateBook) {
+			await updateBook(bookId, { background });
+			// 選択中の本も更新
+			if (selectedBook?.id === bookId) {
+				setSelectedBook({ ...selectedBook, background });
+			}
+		}
+	}, [updateBook, selectedBook]);
+
+	const handleAddLog = useCallback(() => {
+		// TODO: ログ追加画面への遷移を実装
+		bookDetailOverlay.close();
+	}, [bookDetailOverlay]);
+
+	const handleDeleteLog = useCallback(
+		async (logId: number) => {
+			await removeLog(logId);
+		},
+		[removeLog]
+	);
+
+	const handleUpdateLogMemo = useCallback(
+		async (logId: number, memoText: string) => {
+			const errorMessage = await updateLog(logId, { memo: memoText });
+			if (errorMessage) {
+				console.error("ログの更新に失敗しました:", errorMessage);
+			}
+		},
+		[updateLog]
+	);
+
+	useEffect(() => {
+		if (!bookDetailOverlay.isShow) {
+			setSelectedBook(null);
+		}
+	}, [bookDetailOverlay.isShow]);
+
 	return (
         <Container>
             <BookShelf
@@ -104,7 +161,20 @@ export default function BookshelfScreen() {
 				onChangeFormTargetPagesPerDay={setFormTargetPagesPerDay}
 				onFormAdd={handleFormAdd}
 				onDeleteBook={removeBook}
+				onSelectBook={handleSelectBook}
 			/>
+			{selectedBook && (
+				<BookDetailModal
+					overlay={bookDetailOverlay}
+					book={selectedBook}
+					logs={displayLogs}
+					onClose={handleCloseBookDetail}
+					onUpdateBookBackground={handleUpdateBookBackground}
+					onAddLog={handleAddLog}
+					onDeleteLog={handleDeleteLog}
+					onUpdateLogMemo={handleUpdateLogMemo}
+				/>
+			)}
         </Container>
 	);
 }

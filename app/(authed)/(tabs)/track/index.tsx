@@ -1,13 +1,17 @@
-import { useMemo, useState, useCallback } from "react";
+import { useMemo, useState, useCallback, useEffect } from "react";
 import { mockBooks } from "@mods/types/mock/book";
 import { mockLogs } from "@mods/types/mock/log";
 import { Track } from "@mods/ui/container/track/Track";
 import type { TrackStatus } from "@mods/types/track";
 import type { BookWithLogs } from "@mods/ui/container/track/types";
+import type { Log } from "@mods/entities/log";
+import { useOverlay } from "@ui/hooks/useOverlay";
+import { LogDetailModal } from "@mods/ui/container/track/popup/LogDetailModal";
 
 export default function TrackScreen() {
 	const [statusFilter, setStatusFilter] = useState<TrackStatus>("reading");
-	const [selectedBook, setSelectedBook] = useState<BookWithLogs | null>(null);
+	const [selectedLogContext, setSelectedLogContext] = useState<{ book: BookWithLogs; log: Log } | null>(null);
+	const logDetailOverlay = useOverlay();
 
 	const displayBooks = mockBooks;
 	const displayLogs = mockLogs;
@@ -29,22 +33,42 @@ export default function TrackScreen() {
 		setStatusFilter(status);
 	}, []);
 
-	const handleSelectBook = useCallback(
-		(book: BookWithLogs) => {
-			setSelectedBook(book);
+	const handleSelectLog = useCallback(
+		(book: BookWithLogs, log: Log) => {
+			setSelectedLogContext({ book, log });
+			logDetailOverlay.open();
 		},
-		[]
+		[logDetailOverlay]
 	);
 
-	return (
+	const handleCloseLogDetail = useCallback(() => {
+		logDetailOverlay.close();
+	}, [logDetailOverlay]);
 
+	useEffect(() => {
+		if (!logDetailOverlay.isShow) {
+			setSelectedLogContext(null);
+		}
+	}, [logDetailOverlay.isShow]);
+
+	return (
+		<>
 			<Track
 				books={filteredBooks}
 				statusFilter={statusFilter}
 				onChangeStatusFilter={handleChangeStatus}
 				emptyMessage={emptyMessage}
-				onSelectBook={handleSelectBook}
+				onSelectLog={handleSelectLog}
 			/>
+			{selectedLogContext && (
+				<LogDetailModal
+					overlay={logDetailOverlay}
+					book={selectedLogContext.book}
+					log={selectedLogContext.log}
+					onClose={handleCloseLogDetail}
+				/>
+			)}
+		</>
 	);
 }
 

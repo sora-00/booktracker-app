@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { Pressable, View } from "react-native";
 import { Text } from "../../../common/Text";
 import { Image } from "../../../common/Image";
 import { FLAG_SIZE, MARK_SIZE } from "../types/constants";
@@ -6,18 +6,19 @@ import { FLAG_SIZE, MARK_SIZE } from "../types/constants";
 type LogMarkerProps = {
 	x: number;
 	date: string;
+	onPress?: () => void;
 };
 
 const logFlagPng = require("../../../../../app/assets/img/icon/logflag.png");
 const markPng = require("../../../../../app/assets/img/icon/mark.png");
 
-export function LogMarker({ x, date }: LogMarkerProps) {
-	// const progressX = 
-
+export function LogMarker({ x, date, onPress }: LogMarkerProps) {
 	return (
-		<View
+		<Pressable
 			className="absolute items-center justify-center"
-			style={{ left: x-30, top: 25 }}
+			style={{ left: x - 30, top: 25 }}
+			onPress={onPress}
+			hitSlop={12}
 		>
 			{/* 旗の画像 */}
 			<View style={{ top: 5, left: 12 }}>
@@ -33,7 +34,7 @@ export function LogMarker({ x, date }: LogMarkerProps) {
 					</Text>
 				</View>
 			)}
-		</View>
+		</Pressable>
 	);
 }
 
