@@ -5,13 +5,14 @@ import { BookTrackRow } from "./track/BookTrackRow";
 import { START_X, END_X, TRACK_WIDTH } from "./types/constants";
 import { Spacer } from "../../common/Spacer";
 import type { BookWithLogs } from "./types";
+import type { Log } from "@mods/entities/log";
 
 type TrackLayoutProps = {
 	books: BookWithLogs[];
-	onSelectBook: (book: BookWithLogs) => void;
+	onSelectLog: (book: BookWithLogs, log: Log) => void;
 };
 
-export function TrackLayout({ books, onSelectBook }: TrackLayoutProps) {
+export function TrackLayout({ books, onSelectLog }: TrackLayoutProps) {
 	const renderThumbnail = (book: BookWithLogs, index: number) => {
 		const completedPages = Math.min(book.totalPages, Math.max(0, book.completedPages));
 		const completedRatio = book.totalPages > 0 ? completedPages / book.totalPages : 0;
@@ -45,7 +46,7 @@ export function TrackLayout({ books, onSelectBook }: TrackLayoutProps) {
 					<View style={{ width: TRACK_WIDTH }}>
 						{books.map((book) => (
 							<View key={book.id}>
-								<BookTrackRow book={book} startX={START_X} endX={END_X} onPress={onSelectBook} />
+								<BookTrackRow book={book} startX={START_X} endX={END_X} onSelectLog={onSelectLog} />
 							</View>
 						))}
 					</View>

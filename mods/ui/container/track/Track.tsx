@@ -6,13 +6,14 @@ import { TrackLayout } from "./TrackLayout";
 import type { TrackStatus } from "@mods/types/track";
 import { colors } from "../../common/colors";
 import type { BookWithLogs } from "./types";
+import type { Log } from "@mods/entities/log";
 
 type TrackProps = {
 	books: BookWithLogs[];
 	statusFilter: TrackStatus;
 	onChangeStatusFilter: (status: TrackStatus) => void;
 	emptyMessage: string;
-	onSelectBook: (book: BookWithLogs) => void;
+	onSelectLog: (book: BookWithLogs, log: Log) => void;
 };
 
 export function Track({
@@ -20,7 +21,7 @@ export function Track({
 	statusFilter,
 	onChangeStatusFilter,
 	emptyMessage,
-	onSelectBook,
+	onSelectLog,
 }: TrackProps) {
 	return (
 		<View className="flex-1 w-full" style={{ backgroundColor: colors.background.screen }}>
@@ -54,7 +55,7 @@ export function Track({
 						</Text>
 					</View>
 				) : (
-					<TrackLayout books={books} onSelectBook={onSelectBook} />
+					<TrackLayout books={books} onSelectLog={onSelectLog} />
 				)}
 			</View>
 		</View>
