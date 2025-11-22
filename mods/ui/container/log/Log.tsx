@@ -113,8 +113,8 @@ export default function Log({
 				<Spacer height={100} />
 			</ScrollView>
 			
-			{/* 右下のプラスボタン */}
-			<AddButton onPress={modalOverlay.open} />
+			{/* 右下のペンボタン */}
+			<AddButton onPress={modalOverlay.open} icon="pencil" />
 
 			{/* BottomModalでBookLogFormを表示 */}
 			<BottomModal overlay={modalOverlay} portalName="book-log-form" height="full">
