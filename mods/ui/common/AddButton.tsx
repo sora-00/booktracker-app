@@ -4,12 +4,13 @@ import { colors } from "./colors";
 
 type Props = {
 	onPress: () => void;
+	icon?: keyof typeof Ionicons.glyphMap;
 };
 
-export function AddButton({ onPress }: Props) {
+export function AddButton({ onPress, icon = "add" }: Props) {
 	return (
 		<Pressable style={styles.addButton} onPress={onPress}>
-			<Ionicons name="add" size={32} color="white" />
+			<Ionicons name={icon} size={32} color="white" />
 		</Pressable>
 	);
 }
