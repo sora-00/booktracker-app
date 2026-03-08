@@ -1,4 +1,4 @@
-import Progress from "react-native-progress";
+import { Circle } from "react-native-progress";
 import { colors } from "@/constants/colors";
 import { textSizes } from "./Text";
 
@@ -11,7 +11,7 @@ type Props = {
 export function CircularProgress(props: Props) {
 	const progressValue = props.progress / 100;
 	return (
-		<Progress.Circle
+		<Circle
 			progress={progressValue}
 			size={props.size}
 			thickness={props.thickness}
