@@ -1,7 +1,7 @@
 import { View } from "react-native";
 import { Link } from "expo-router";
-import { Text } from "@ui/common/Text";
-import { rTabsBookshelf } from "@mods/routes";
+import { Text } from "@/components/common/Text";
+import { rTabsBookshelf } from "@/routes";
 
 export default function EntryScreen() {
   return (

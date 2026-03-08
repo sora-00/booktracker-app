@@ -7,16 +7,8 @@
     "downlevelIteration": true,
     "moduleResolution": "bundler",
     "baseUrl": ".",
-    "paths": {
-      "@ui/*": ["mods/ui/*"],
-      "@mods/*": ["mods/*"]
-    }
-  },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    "src/types/env.d.ts",
-    "nativewind-env.d.ts"
-  ],
-  "extends": "expo/tsconfig.base"
+    "paths": {"@/*":["src/*"],
+    "~/*": ["app/*"]}},
+    "include": ["**/*.ts","**/*.tsx","src/types/env.d.ts","nativewind-env.d.ts"],
+    "extends": "expo/tsconfig.base"
 }
