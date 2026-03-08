@@ -1,5 +1,5 @@
-import { Container } from "@ui/common/Container";
-import Setting from "@ui/container/setting/Setting";
+import { Container } from "@/components/common/Container";
+import Setting from "@/components/container/setting/Setting";
 
 export default function SettingScreen() {
 	return (

@@ -1,6 +1,6 @@
 import { Tabs } from "expo-router";
-import { colors } from "@ui/common/colors";
-import { textSizes } from "@ui/common/Text";
+import { colors } from "@/constants/colors";
+import { textSizes } from "@/components/common/Text";
 import { BottomTabBarButtonProps } from "@react-navigation/bottom-tabs";
 import { Pressable, StyleSheet, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -59,7 +59,7 @@ export default function TabsLayout() {
 			screenOptions={{
 				headerShown: false,
 				tabBarStyle: {
-					backgroundColor: colors.main.secondary,
+					backgroundColor: colors.light,
 					borderTopWidth: 0,
 					paddingBottom: 0,
 					height: 60,

@@ -4,9 +4,9 @@ import { Platform } from "react-native";
 import { useEffect } from "react";
 import { useFonts } from "expo-font";
 import { PortalProvider, PortalHost } from "@gorhom/portal";
-import { initApiFetcher } from "../mods/repositories/cli/client";
-import { getApiBaseUrl } from "../mods/utils/config";
-import type { FetcherInterceptor } from "../mods/utils/api-fetcher/config";
+import { initApiFetcher } from "@/repositories/cli/client";
+import { getApiBaseUrl } from "@/utils/config";
+import type { FetcherInterceptor } from "@/types";
 
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts({
@@ -55,6 +55,11 @@ export default function RootLayout() {
         <Slot />
         <PortalHost name="book-form" />
         <PortalHost name="date-picker" />
+        <PortalHost name="book-log-form" />
+        <PortalHost name="book-selector" />
+        <PortalHost name="track-log-detail-modal" />
+        <PortalHost name="log-memo-modal" />
+        <PortalHost name="book-detail-modal" />
       </PortalProvider>
     </SafeAreaProvider>
   );
