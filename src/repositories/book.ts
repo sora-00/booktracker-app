@@ -1,19 +1,28 @@
 import type { Book, BookResp, GetBookListOptions, NewBookInput } from "@/types";
 import { fetcher } from "./cli/client";
 
-function newBookInputToApiBody(input: NewBookInput) {
-	return {
-		title: input.title,
-		author: input.author,
-		totalPages: input.totalPages,
-		publisher: input.publisher,
-		thumbnailUrl: input.thumbnailUrl,
-		status: input.status,
-		targetCompleteDate: input.targetCompleteDate,
-		encounterNote: input.encounterNote,
-		readPages: input.readPages,
-		targetPagesPerDay: input.targetPagesPerDay,
-	};
+const BOOK_API_BODY_KEYS: (keyof NewBookInput)[] = [
+	"title",
+	"author",
+	"totalPages",
+	"publisher",
+	"thumbnailUrl",
+	"status",
+	"targetCompleteDate",
+	"encounterNote",
+	"readPages",
+	"targetPagesPerDay",
+];
+
+/** Partial のうち定義されたキーだけ API 用の body に詰める。targetCompleteDate は null を送らない。 */
+function toBookApiBody(input: Partial<NewBookInput>): Record<string, unknown> {
+	const body: Record<string, unknown> = {};
+	for (const key of BOOK_API_BODY_KEYS) {
+		const value = input[key];
+		const include = key === "targetCompleteDate" ? value != null : value !== undefined;
+		if (include) body[key] = value;
+	}
+	return body;
 }
 
 export async function getBookList(
@@ -40,7 +49,7 @@ export async function getBook(accessToken: string, id: number): Promise<BookResp
 }
 
 export async function postBook(accessToken: string, input: NewBookInput): Promise<BookResp["postBook"]> {
-	const body = newBookInputToApiBody(input);
+	const body = toBookApiBody(input);
 	return await fetcher.fetchJson<BookResp["postBook"]>({
 		method: "POST",
 		path: "/books",
@@ -54,17 +63,7 @@ export async function putBook(
 	id: number,
 	input: Partial<NewBookInput>
 ): Promise<BookResp["putBook"]> {
-	const body: Record<string, unknown> = {};
-	if (input.title !== undefined) body.title = input.title;
-	if (input.author !== undefined) body.author = input.author;
-	if (input.totalPages !== undefined) body.totalPages = input.totalPages;
-	if (input.publisher !== undefined) body.publisher = input.publisher;
-	if (input.thumbnailUrl !== undefined) body.thumbnailUrl = input.thumbnailUrl;
-	if (input.status !== undefined) body.status = input.status;
-	if (input.targetCompleteDate != null) body.targetCompleteDate = input.targetCompleteDate;
-	if (input.encounterNote !== undefined) body.encounterNote = input.encounterNote;
-	if (input.readPages !== undefined) body.readPages = input.readPages;
-	if (input.targetPagesPerDay !== undefined) body.targetPagesPerDay = input.targetPagesPerDay;
+	const body = toBookApiBody(input);
 	return await fetcher.fetchJson<BookResp["putBook"]>({
 		method: "PUT",
 		path: `/books/${id}`,
