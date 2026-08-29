@@ -14,12 +14,15 @@ const BOOK_API_BODY_KEYS: (keyof NewBookInput)[] = [
 	"targetPagesPerDay",
 ];
 
-/** Partial のうち定義されたキーだけ API 用の body に詰める。targetCompleteDate は null を送らない。 */
+/** Partial のうち定義されたキーだけ API 用の body に詰める。targetCompleteDate は null/空文字を送らない。 */
 function toBookApiBody(input: Partial<NewBookInput>): Record<string, unknown> {
 	const body: Record<string, unknown> = {};
 	for (const key of BOOK_API_BODY_KEYS) {
 		const value = input[key];
-		const include = key === "targetCompleteDate" ? value != null : value !== undefined;
+		const include =
+			key === "targetCompleteDate"
+				? value != null && value !== ""
+				: value !== undefined;
 		if (include) body[key] = value;
 	}
 	return body;

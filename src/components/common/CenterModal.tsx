@@ -48,7 +48,7 @@ export function CenterModal(props: Props) {
 								exiting={ZoomOut.duration(250).easing(Easing.in(Easing.cubic))}
 								style={{ maxWidth: SCREEN_WIDTH * 0.85, width: SCREEN_WIDTH * 0.85 }}
 							>
-								<View className="bg-white rounded-3xl p-5 h-[60%]">
+								<View className="bg-white rounded-3xl p-5 h-[80%]">
 									{props.children}
 								</View>
 							</Animated.View>

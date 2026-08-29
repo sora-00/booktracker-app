@@ -1,4 +1,4 @@
-import { ScrollView, View } from "react-native";
+import { ScrollView, View, Alert } from "react-native";
 import { BookCard } from "@/components/common/BookCard";
 import { Spacer } from "@/components/common/Spacer";
 import { BottomModal } from "@/components/common/BottomModal";
@@ -18,24 +18,21 @@ type Props = {
 	formTotalPages: string;
 	formPublisher: string;
 	formEncounterNote: string;
-	formThumbnailUrl: string;
 	formReadingStatus: Status;
 	formTargetCompleteDate: string;
 	formReadPages: string;
 	formTargetPagesPerDay: string;
-	formResetTrigger?: number;
 	onChangeFormTitle: (value: string) => void;
 	onChangeFormAuthor: (value: string) => void;
 	onChangeFormTotalPages: (value: string) => void;
 	onChangeFormPublisher: (value: string) => void;
 	onChangeFormEncounterNote: (value: string) => void;
-	onFormThumbnailUrlChange: (url: string) => void;
 	onFormReadingStatusChange: (status: Status) => void;
 	onChangeFormTargetCompleteDate: (value: string) => void;
 	onChangeFormReadPages: (value: string) => void;
 	onChangeFormTargetPagesPerDay: (value: string) => void;
-	onFormAdd: () => void;
-	onFormThumbnailUploadStateChange?: (hasImage: boolean, isUploading: boolean) => void;
+	onFormAdd: () => Promise<boolean>;
+	formIsAdding?: boolean;
 	onDeleteBook?: (bookId: number) => void;
 	onSelectBook?: (book: Book) => void;
 };
@@ -43,9 +40,16 @@ type Props = {
 export default function BookShelf(props: Props) {
 	const modalOverlay = useOverlay();
 
-	const handleFormAdd = () => {
-		props.onFormAdd();
-		modalOverlay.close();
+	const handleFormAdd = async () => {
+		try {
+			const success = await props.onFormAdd();
+			if (success) {
+				modalOverlay.close();
+				Alert.alert("追加しました", "本を登録しました");
+			}
+		} catch (e) {
+			Alert.alert("エラー", e instanceof Error ? e.message : "追加処理で問題が発生しました");
+		}
 	};
 
 	return (
@@ -77,13 +81,12 @@ export default function BookShelf(props: Props) {
 			<AddButton onPress={modalOverlay.open} icon="add" />
 			<BottomModal overlay={modalOverlay} portalName="book-form" height="full">
 				<BookForm
-					resetTrigger={props.formResetTrigger}
+					isAdding={props.formIsAdding}
 					title={props.formTitle}
 					author={props.formAuthor}
 					totalPages={props.formTotalPages}
 					publisher={props.formPublisher}
 					encounterNote={props.formEncounterNote}
-					thumbnailUrl={props.formThumbnailUrl}
 					readingStatus={props.formReadingStatus}
 					targetCompleteDate={props.formTargetCompleteDate}
 					readPages={props.formReadPages}
@@ -93,13 +96,11 @@ export default function BookShelf(props: Props) {
 					onChangeTotalPages={props.onChangeFormTotalPages}
 					onChangePublisher={props.onChangeFormPublisher}
 					onChangeEncounterNote={props.onChangeFormEncounterNote}
-					onThumbnailUrlChange={props.onFormThumbnailUrlChange}
 					onReadingStatusChange={props.onFormReadingStatusChange}
 					onChangeTargetCompleteDate={props.onChangeFormTargetCompleteDate}
 					onChangeReadPages={props.onChangeFormReadPages}
 					onChangeTargetPagesPerDay={props.onChangeFormTargetPagesPerDay}
 					onAdd={handleFormAdd}
-					onThumbnailUploadStateChange={props.onFormThumbnailUploadStateChange}
 				/>
 			</BottomModal>
 		</View>

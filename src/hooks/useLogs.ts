@@ -2,11 +2,12 @@ import { useState, useCallback, useEffect } from "react";
 import { getLogList, postLog, putLog, deleteLog } from "@/repositories/log";
 import type { Log, NewLogInput, Status } from "@/types";
 import { getDataSource } from "@/utils/config";
+import { useAuth } from "@/hooks/useAuth";
 
 export type RetUseLogs = ReturnType<typeof useLogs>;
 
 export function useLogs() {
-	const accessToken = "";
+	const { accessToken, isLoading: authLoading } = useAuth();
 
 	const [isLoading, setIsLoading] = useState(false);
 	const [isAdding, setIsAdding] = useState(false);
@@ -16,6 +17,13 @@ export function useLogs() {
 
 	const getLogs = useCallback(async () => {
 		if (getDataSource() === "memory") {
+			return [];
+		}
+		if (authLoading) {
+			return [];
+		}
+		if (!accessToken) {
+			setLogs([]);
 			return [];
 		}
 		try {
@@ -33,7 +41,7 @@ export function useLogs() {
 			setLogs([]);
 			return [];
 		}
-	}, [accessToken, selectedFilter]);
+	}, [accessToken, authLoading, selectedFilter]);
 
 	useEffect(() => {
 		getLogs();
@@ -41,6 +49,9 @@ export function useLogs() {
 
 	const addLog = useCallback(
 		async (input: NewLogInput) => {
+			if (authLoading || !accessToken) {
+				return "認証情報がありません。再ログインしてください";
+			}
 			setIsAdding(true);
 			try {
 				await postLog(accessToken, input);
@@ -52,11 +63,14 @@ export function useLogs() {
 				return "ログの追加に失敗しました";
 			}
 		},
-		[accessToken, getLogs]
+		[accessToken, authLoading, getLogs]
 	);
 
 	const updateLog = useCallback(
 		async (id: number, input: Partial<NewLogInput>) => {
+			if (authLoading || !accessToken) {
+				return "認証情報がありません。再ログインしてください";
+			}
 			try {
 				await putLog(accessToken, id, input);
 				await getLogs();
@@ -65,11 +79,14 @@ export function useLogs() {
 				return "ログの更新に失敗しました";
 			}
 		},
-		[accessToken, getLogs]
+		[accessToken, authLoading, getLogs]
 	);
 
 	const removeLog = useCallback(
 		async (id: number) => {
+			if (authLoading || !accessToken) {
+				return;
+			}
 			setIsRemoving(true);
 			try {
 				await deleteLog(accessToken, id);
@@ -79,7 +96,7 @@ export function useLogs() {
 				setIsRemoving(false);
 			}
 		},
-		[accessToken, getLogs]
+		[accessToken, authLoading, getLogs]
 	);
 
 	return {

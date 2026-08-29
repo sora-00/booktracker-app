@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 import { Alert } from "react-native";
 import type { NewBookInput } from "@/types";
+import { BOOK_COVER_PLACEHOLDER_TOKEN } from "@/utils/bookCover";
 
 type BookFormForSubmit = {
 	title: string;
@@ -8,44 +9,28 @@ type BookFormForSubmit = {
 	totalPages: string;
 	publisher: string;
 	encounterNote: string;
-	thumbnailUrl: string;
 	readingStatus: NewBookInput["status"];
 	targetCompleteDate: string;
 	readPages: string;
 	targetPagesPerDay: string;
-	hasThumbnailImage: boolean;
-	thumbnailUploading: boolean;
 	resetForm: () => void;
 };
 
 type AddBookFn = (input: NewBookInput) => Promise<string>;
 
 /**
- * 本フォームの送信（バリデーション + addBook + リセット）
+ * 本フォームの送信（バリデーション + addBook + リセット）。
+ * 戻り値: 追加に成功したら true、失敗またはバリデーションエラーなら false（エラーは Alert で表示済み）
  */
 export function useBookFormSubmit(bookForm: BookFormForSubmit, addBook: AddBookFn) {
-	const handleFormAdd = useCallback(async () => {
-		if (!bookForm.thumbnailUrl.trim()) {
-			if (bookForm.hasThumbnailImage && bookForm.thumbnailUploading) {
-				Alert.alert("入力エラー", "画像をアップロード中です。しばらくお待ちください");
-				return;
-			}
-			if (bookForm.hasThumbnailImage && !bookForm.thumbnailUploading) {
-				Alert.alert(
-					"入力エラー",
-					"表紙画像のアップロードに失敗しました。ネットワークを確認してください。"
-				);
-				return;
-			}
-		}
-
+	const handleFormAdd = useCallback(async (): Promise<boolean> => {
 		const errorMessage = await addBook({
 			title: bookForm.title.trim(),
 			author: bookForm.author.trim(),
 			totalPages: bookForm.totalPages ? parseInt(bookForm.totalPages, 10) : 0,
 			publisher: bookForm.publisher.trim(),
 			encounterNote: bookForm.encounterNote || "",
-			thumbnailUrl: bookForm.thumbnailUrl.trim(),
+			thumbnailUrl: BOOK_COVER_PLACEHOLDER_TOKEN,
 			status: bookForm.readingStatus,
 			targetCompleteDate: bookForm.targetCompleteDate,
 			readPages: bookForm.readPages ? parseInt(bookForm.readPages, 10) : 0,
@@ -54,10 +39,11 @@ export function useBookFormSubmit(bookForm: BookFormForSubmit, addBook: AddBookF
 
 		if (errorMessage) {
 			Alert.alert("エラー", errorMessage);
-			return;
+			return false;
 		}
 
 		bookForm.resetForm();
+		return true;
 	}, [bookForm, addBook]);
 
 	return { handleFormAdd };

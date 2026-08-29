@@ -4,6 +4,7 @@ import { CenterModal } from "@/components/common/CenterModal";
 import { Text, textSizes } from "@/components/common/Text";
 import { colors } from "@/constants/colors";
 import { Image } from "@/components/common/Image";
+import { BookCoverPlaceholder } from "@/components/common/BookCoverPlaceholder";
 import { formatDateSlash, getDateFromISO } from "@/utils/date";
 import { calculateProgress } from "@/utils/reading";
 import { CircularProgress } from "@/components/common/CircularProgress";
@@ -12,6 +13,7 @@ import { LogCard } from "@/components/container/log/LogCard";
 import { Spacer } from "@/components/common/Spacer";
 import { SharpButton } from "@/components/common/SharpButton";
 import type { Book, Log } from "@/types";
+import { hasRenderableBookCover } from "@/utils/bookCover";
 
 type TabType = "about" | "logs";
 
@@ -32,7 +34,7 @@ export function BookDetailModal(props: Props) {
 	const [editedEncounterNote, setEditedEncounterNote] = useState(props.book.encounterNote || "");
 
 	const { overlay, book, logs, onClose, onDeleteLog, onUpdateLogMemo, onUpdateBookEncounterNote, onAddLog } = props;
-	const thumbnailSource = typeof book.thumbnailUrl === "string" ? { uri: book.thumbnailUrl } : book.thumbnailUrl;
+	const showCover = hasRenderableBookCover(book.thumbnailUrl);
 	const progress = calculateProgress(book.readPages, book.totalPages);
 	const remainingDays = book.remainingDays ?? 0;
 	const bookLogs = logs.filter((log) => log.bookId === book.id);
@@ -46,7 +48,7 @@ export function BookDetailModal(props: Props) {
 	return (
 		<CenterModal overlay={overlay} portalName="book-detail-modal">
 			<View className="flex-1">
-				<View className="flex-row items-center justify-between pb-2 border-b border-accent">
+						<View className="flex-row items-center justify-between pb-2 border-b border-accent">
 					<View className="flex-row gap-2">
 						<View className={`px-4 py-2 rounded-lg ${activeTab === "about" ? "bg-primary" : ""}`}>
 							<Pressable onPress={() => setActiveTab("about")}>
@@ -68,31 +70,48 @@ export function BookDetailModal(props: Props) {
 					{activeTab === "about" ? (
 						<>
 							<View className="flex-row items-start">
-								<Image source={thumbnailSource} variant="rounded-md" style={{ width: 100, height: 140, borderWidth: 2, borderColor: colors.primary }} />
+								{showCover ? (
+									<Image
+										source={typeof book.thumbnailUrl === "string" ? { uri: book.thumbnailUrl } : book.thumbnailUrl}
+										variant="rounded-md"
+										style={{ width: 100, height: 140, borderWidth: 2, borderColor: colors.primary }}
+									/>
+								) : (
+									<BookCoverPlaceholder width={100} height={140} borderWidth={2} />
+								)}
 								<View className="flex-1 ml-4">
 									<Text size="title2" weight="bold" color="black">{book.title}</Text>
-									<View className="mt-1"><Text size="body1" color="gray">{book.author}</Text></View>
-									{book.publisher && <View className="mt-1"><Text size="body1" color="gray">{book.publisher}</Text></View>}
+									<View className="mt-1"><Text size="body1" color="black">{book.author}</Text></View>
+									{book.publisher && (
+										<View className="mt-1">
+											<Text size="body1" color="black">{book.publisher}</Text>
+										</View>
+									)}
 								</View>
 							</View>
 							<Spacer height={24} />
 							<View>
 								<DetailRow label="本を登録した日" value={getDateFromISO(book.createdAt)} />
-								<DetailRow label="目標読了日" value={`${formatDateSlash(book.targetCompleteDate)}${remainingDays > 0 ? ` 残り${remainingDays}日` : ""}`} />
+								<DetailRow
+									label="目標読了日"
+									value={`${formatDateSlash(book.targetCompleteDate)}${remainingDays > 0 ? ` 残り${remainingDays}日` : ""}`}
+								/>
 							</View>
 							<Spacer height={24} />
 							<View className="flex-row items-center justify-between">
 								<View className="flex-1">
 									<Text size="body1" color="black" weight="bold">読んだ</Text>
 									<Text size="title1" color="black" weight="bold">{book.readPages}ページ</Text>
-									<View className="mt-1"><Text size="body1" color="gray">全部で {book.totalPages}ページ</Text></View>
+									<View className="mt-1">
+										<Text size="body1" color="black">全部で {book.totalPages}ページ</Text>
+									</View>
 								</View>
 								<CircularProgress progress={progress} size={100} thickness={8} />
 							</View>
 							<Spacer height={24} />
 							<View>
 								<View className="flex-row items-center justify-between mb-2">
-									<Text size="body2" color="gray" weight="bold">この本に出会った経緯</Text>
+									<Text size="body2" color="black" weight="bold">この本に出会った経緯</Text>
 									{!isEditingEncounterNote && (
 										<Pressable onPress={() => setIsEditingEncounterNote(true)}>
 											<Ionicons name="create-outline" size={20} color={colors.text.gray} />
@@ -102,9 +121,23 @@ export function BookDetailModal(props: Props) {
 								{isEditingEncounterNote ? (
 									<View>
 										<View className="p-3 rounded-2xl bg-main">
-											<TextInput value={editedEncounterNote} onChangeText={setEditedEncounterNote} multiline placeholder="この本に出会った経緯を入力してください" placeholderTextColor={colors.text.gray} style={{ fontSize: textSizes.body1, fontFamily: "ZenMaruGothic-Regular", color: colors.text.black, minHeight: 100, textAlignVertical: "top" }} />
+											<TextInput
+												value={editedEncounterNote}
+												onChangeText={setEditedEncounterNote}
+												multiline
+												placeholder="この本に出会った経緯を入力してください"
+												placeholderTextColor={colors.text.gray}
+												autoFocus
+												style={{
+													fontSize: textSizes.body1,
+													fontFamily: "ZenMaruGothic-Regular",
+													color: colors.text.black,
+													minHeight: 100,
+													textAlignVertical: "top",
+												}}
+											/>
 										</View>
-										<View className="flex-row justify-end mt-2 gap-2">
+										<View className="flex-row justify-end mt-4 gap-2">
 											<View className="px-4 py-2 rounded-lg bg-main">
 												<Pressable onPress={() => { setEditedEncounterNote(book.encounterNote || ""); setIsEditingEncounterNote(false); }}>
 													<Text size="body1" color="black">キャンセル</Text>
@@ -118,8 +151,10 @@ export function BookDetailModal(props: Props) {
 										</View>
 									</View>
 								) : (
-									<View className="p-3 rounded-2xl bg-main">
-										<Text size="body1" color="black">{book.encounterNote?.trim() || "この本に出会った経緯を入力してください"}</Text>
+									<View className="p-3 rounded-2xl bg-gray">
+										<Text size="body1" color="black">
+											{book.encounterNote?.trim() || "この本に出会った経緯を入力してください"}
+										</Text>
 									</View>
 								)}
 							</View>
@@ -135,7 +170,7 @@ export function BookDetailModal(props: Props) {
 								))
 							) : (
 								<View className="items-center justify-center py-20">
-									<Text size="body1" color="gray">記録がありません</Text>
+									<Text size="body1" color="black">記録がありません</Text>
 								</View>
 							)}
 							{onAddLog && (
@@ -155,7 +190,7 @@ export function BookDetailModal(props: Props) {
 
 const DetailRow = ({ label, value }: { label: string; value: string }) => (
 	<View className="flex-row items-center justify-between py-2">
-		<Text size="body2" color="gray">{label}</Text>
+		<Text size="body2" color="black">{label}</Text>
 		<Text size="body1" color="black" weight="bold">{value || "-"}</Text>
 	</View>
 );

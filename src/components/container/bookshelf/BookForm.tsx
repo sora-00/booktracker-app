@@ -1,11 +1,10 @@
 import { View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/common/Input";
 import { RoundedButton } from "@/components/common/RoundedButton";
 import { Spacer } from "@/components/common/Spacer";
-import { useImageUploads } from "@/hooks/useImageUploads";
-import { ThumbnailUpload } from "./ThumbnailUpload";
+import { BookCoverPlaceholder } from "@/components/common/BookCoverPlaceholder";
 import { Divider } from "@/components/common/Divider";
 import { Text } from "@/components/common/Text";
 import { ReadingStatusSelector } from "./ReadingStatusSelector";
@@ -21,13 +20,15 @@ import {
 	validateTargetPagesPerDay,
 } from "@/utils/validation";
 
+const COVER_PREVIEW_W = 100;
+const COVER_PREVIEW_H = 140;
+
 type Props = {
 	title: string;
 	author: string;
 	totalPages: string;
 	publisher: string;
 	encounterNote: string;
-	thumbnailUrl: string;
 	readingStatus: Status;
 	targetCompleteDate: string;
 	readPages: string;
@@ -37,21 +38,16 @@ type Props = {
 	onChangeTotalPages: (value: string) => void;
 	onChangePublisher: (value: string) => void;
 	onChangeEncounterNote: (value: string) => void;
-	onThumbnailUrlChange: (url: string) => void;
 	onReadingStatusChange: (status: Status) => void;
 	onChangeTargetCompleteDate: (value: string) => void;
 	onChangeReadPages: (value: string) => void;
 	onChangeTargetPagesPerDay: (value: string) => void;
 	onAdd: () => void;
-	onThumbnailUploadStateChange?: (hasImage: boolean, isUploading: boolean) => void;
-	resetTrigger?: number;
+	/** 追加送信中なら true（ボタン無効＋「追加中...」表示） */
+	isAdding?: boolean;
 };
 
 export default function BookForm(props: Props) {
-	const { uploadedData, localImageUri, isUploading, upload, clearUploadedData } = useImageUploads();
-	const displayImageUri = uploadedData?.url || localImageUri;
-	const hasImage = !!displayImageUri;
-
 	const [titleError, setTitleError] = useState(false);
 	const [authorError, setAuthorError] = useState(false);
 	const [totalPagesError, setTotalPagesError] = useState(false);
@@ -60,21 +56,25 @@ export default function BookForm(props: Props) {
 	const [readPagesError, setReadPagesError] = useState(false);
 	const [targetPagesPerDayError, setTargetPagesPerDayError] = useState(false);
 
-	useEffect(() => {
-		props.onThumbnailUrlChange(uploadedData?.url || "");
-	}, [uploadedData?.url]);
+	const isUnread = props.readingStatus === "unread";
 
 	useEffect(() => {
-		props.onThumbnailUploadStateChange?.(hasImage, isUploading);
-	}, [hasImage, isUploading, props.onThumbnailUploadStateChange]);
-
-	useEffect(() => {
-		if (props.resetTrigger !== undefined && props.resetTrigger > 0) {
-			clearUploadedData();
+		if (props.readingStatus === "unread") {
+			setReadPagesError(false);
+			if (props.readPages) {
+				props.onChangeReadPages("");
+			}
 		}
-	}, [props.resetTrigger]);
+	}, [props.readingStatus]);
 
-	const hasValidationError = titleError || authorError || totalPagesError || publisherError || encounterNoteError || readPagesError || targetPagesPerDayError;
+	const hasValidationError =
+		titleError ||
+		authorError ||
+		totalPagesError ||
+		publisherError ||
+		encounterNoteError ||
+		(!isUnread && readPagesError) ||
+		targetPagesPerDayError;
 
 	return (
 		<View className="flex flex-1 flex-col w-full min-h-0">
@@ -111,8 +111,10 @@ export default function BookForm(props: Props) {
 							<Input title="出版社" value={props.publisher} onChangeText={props.onChangePublisher} validation={validatePublisher} onValidationChange={setPublisherError} />
 						</View>
 					</View>
-					<View className="w-1/2">
-						<ThumbnailUpload displayImageUri={displayImageUri} isUploading={isUploading} onUpload={upload} />
+					<View className="w-1/2 items-center">
+						<Text size="body1" color="black">表紙</Text>
+						<Spacer height={5} />
+						<BookCoverPlaceholder width={COVER_PREVIEW_W} height={COVER_PREVIEW_H} borderWidth={2} />
 					</View>
 				</View>
 				<Spacer height={20} />
@@ -134,7 +136,18 @@ export default function BookForm(props: Props) {
 				<View className="flex-row w-full">
 					<View className="w-1/2">
 						<View className="pr-10">
-							<Input title="読み終わったページ" value={props.readPages} onChangeText={props.onChangeReadPages} validation={validateReadPages} onValidationChange={setReadPagesError} keyboardType="numeric" />
+							<Input
+								title="読み終わったページ"
+								value={props.readPages}
+								onChangeText={(value) => {
+									if (isUnread) return;
+									props.onChangeReadPages(value);
+								}}
+								validation={isUnread ? undefined : validateReadPages}
+								onValidationChange={setReadPagesError}
+								keyboardType="numeric"
+								editable={!isUnread}
+							/>
 						</View>
 					</View>
 					<Spacer height={20} />
@@ -147,7 +160,22 @@ export default function BookForm(props: Props) {
 				<Spacer height={45} />
 			</KeyboardAwareScrollView>
 			<View className="w-full">
-				<RoundedButton title="追加" onPress={props.onAdd} disabled={!props.title || !props.author || !props.totalPages || !props.publisher || !props.thumbnailUrl || !props.encounterNote || !props.readingStatus || !props.targetCompleteDate || !props.readPages || !props.targetPagesPerDay || hasValidationError} />
+				<RoundedButton
+					title={props.isAdding ? "追加中..." : "追加"}
+					onPress={props.onAdd}
+					disabled={
+						props.isAdding ||
+						!props.title ||
+						!props.author ||
+						!props.totalPages ||
+						!props.publisher ||
+						!props.readingStatus ||
+						!props.targetCompleteDate ||
+						(!isUnread && !props.readPages) ||
+						!props.targetPagesPerDay ||
+						hasValidationError
+					}
+				/>
 			</View>
 		</View>
 	);

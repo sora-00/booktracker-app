@@ -1,19 +1,33 @@
 import { View } from "react-native";
-import { Link } from "expo-router";
+import { Redirect, useRouter } from "expo-router";
 import { Text } from "@/components/common/Text";
-import { rTabsBookshelf } from "@/routes";
+import { rEntryLogin, rEntrySignup, rTabsBookshelf } from "@/routes";
+import { RoundedButton } from "@/components/common/RoundedButton";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function EntryScreen() {
+  const router = useRouter();
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return null;
+  }
+  if (isAuthenticated) {
+    return <Redirect href={rTabsBookshelf()} />;
+  }
+
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <View style={{ marginBottom: 20 }}>
-        <Text size="big">認証前画面</Text>
+    <View className="flex-1 justify-center px-6">
+      <View className="mb-6">
+        <Text size="big" weight="bold">BookTracker</Text>
       </View>
-      <Link href={rTabsBookshelf()}>
-        <Text size="body1" color="black">
-          ホームへ進む（認証済み）
-        </Text>
-      </Link>
+      <View className="mb-8">
+        <Text size="body1" color="gray">はじめるにはログインまたはアカウント作成を選択してください</Text>
+      </View>
+      <View className="mb-4">
+        <RoundedButton title="アカウント作成" onPress={() => router.push(rEntrySignup())} />
+      </View>
+      <RoundedButton title="ログイン" onPress={() => router.push(rEntryLogin())} />
     </View>
   );
 }

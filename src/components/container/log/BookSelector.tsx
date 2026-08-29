@@ -1,10 +1,12 @@
 import { View, ScrollView, Pressable } from "react-native";
 import { Text } from "@/components/common/Text";
 import { Image } from "@/components/common/Image";
+import { BookCoverPlaceholder } from "@/components/common/BookCoverPlaceholder";
 import { Spacer } from "@/components/common/Spacer";
 import { colors } from "@/constants/colors";
 import { Ionicons } from "@expo/vector-icons";
 import type { Book } from "@/types";
+import { hasRenderableBookCover } from "@/utils/bookCover";
 
 type Props = {
 	books: Book[];
@@ -20,14 +22,14 @@ export function BookSelector(props: Props) {
 		<View key={book.id} className="items-center w-1/4 px-1.5">
 			<Pressable onPress={() => props.onSelectBook(book)}>
 				<View className="items-center">
-				{book.thumbnailUrl ? (
+				{hasRenderableBookCover(book.thumbnailUrl) ? (
 					typeof book.thumbnailUrl === "string" ? (
 						<Image source={{ uri: book.thumbnailUrl }} variant="rounded-md" style={{ resizeMode: "cover", width: 75, height: 105 }} />
 					) : (
 						<Image source={book.thumbnailUrl} variant="rounded-md" style={{ resizeMode: "cover", width: 75, height: 105 }} />
 					)
 				) : (
-					<View className="w-[75px] h-[105px] rounded-md bg-gray-100 items-center justify-center" />
+					<BookCoverPlaceholder width={75} height={105} />
 				)}
 				<Spacer height={6} />
 				<View className="w-[75px] items-center">

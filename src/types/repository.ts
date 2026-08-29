@@ -21,8 +21,3 @@ export type LogResp = {
 };
 
 export type GetLogListOptions = { status?: Status };
-
-export type BookThumbnailUploadResponse = {
-	id: string;
-	url: string;
-};

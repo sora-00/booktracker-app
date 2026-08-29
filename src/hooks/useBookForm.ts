@@ -12,14 +12,10 @@ export function useBookForm() {
 	const [totalPages, setTotalPages] = useState("");
 	const [publisher, setPublisher] = useState("");
 	const [encounterNote, setEncounterNote] = useState("");
-	const [thumbnailUrl, setThumbnailUrl] = useState("");
 	const [readingStatus, setReadingStatus] = useState<Status>("unread");
 	const [targetCompleteDate, setTargetCompleteDate] = useState(getOneMonthLaterDate());
 	const [readPages, setReadPages] = useState("");
 	const [targetPagesPerDay, setTargetPagesPerDay] = useState("");
-	const [hasThumbnailImage, setHasThumbnailImage] = useState(false);
-	const [thumbnailUploading, setThumbnailUploading] = useState(false);
-	const [resetTrigger, setResetTrigger] = useState(0);
 
 	useEffect(() => {
 		if (targetCompleteDate && totalPages) {
@@ -40,19 +36,10 @@ export function useBookForm() {
 		setTotalPages("");
 		setPublisher("");
 		setEncounterNote("");
-		setThumbnailUrl("");
 		setReadingStatus("unread");
 		setTargetCompleteDate(getOneMonthLaterDate());
 		setReadPages("");
 		setTargetPagesPerDay("");
-		setHasThumbnailImage(false);
-		setThumbnailUploading(false);
-		setResetTrigger((k) => k + 1);
-	}, []);
-
-	const handleThumbnailUploadStateChange = useCallback((hasImage: boolean, isUploading: boolean) => {
-		setHasThumbnailImage(hasImage);
-		setThumbnailUploading(isUploading);
 	}, []);
 
 	return {
@@ -61,25 +48,19 @@ export function useBookForm() {
 		totalPages,
 		publisher,
 		encounterNote,
-		thumbnailUrl,
 		readingStatus,
 		targetCompleteDate,
 		readPages,
 		targetPagesPerDay,
-		resetTrigger,
-		hasThumbnailImage,
-		thumbnailUploading,
 		setTitle,
 		setAuthor,
 		setTotalPages,
 		setPublisher,
 		setEncounterNote,
-		setThumbnailUrl,
 		setReadingStatus,
 		setTargetCompleteDate,
 		setReadPages,
 		setTargetPagesPerDay,
-		handleThumbnailUploadStateChange,
 		resetForm,
 	};
 }
