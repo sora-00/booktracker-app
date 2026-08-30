@@ -4,9 +4,11 @@ import { CenterModal } from "@/components/common/CenterModal";
 import { Text } from "@/components/common/Text";
 import { colors } from "@/constants/colors";
 import { Image } from "@/components/common/Image";
+import { BookCoverPlaceholder } from "@/components/common/BookCoverPlaceholder";
 import { formatDateSlash } from "@/utils/date";
 import { Ionicons } from "@expo/vector-icons";
 import type { Book, Log } from "@/types";
+import { hasRenderableBookCover } from "@/utils/bookCover";
 
 type Props = {
 	overlay: ComponentProps<typeof CenterModal>["overlay"];
@@ -16,7 +18,7 @@ type Props = {
 };
 
 export function LogDetailModal(props: Props) {
-	const thumbnailSource = typeof props.book.thumbnailUrl === "string" ? { uri: props.book.thumbnailUrl } : props.book.thumbnailUrl;
+	const showCover = hasRenderableBookCover(props.book.thumbnailUrl);
 
 	return (
 		<CenterModal overlay={props.overlay} portalName="track-log-detail-modal">
@@ -30,11 +32,15 @@ export function LogDetailModal(props: Props) {
 				<View className="flex-1 mt-4">
 					<ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
 					<View className="flex-row items-center">
-						<Image
-							source={thumbnailSource}
-							variant="rounded-md"
-							style={{ width: 100, height: 140, borderWidth: 2, borderColor: colors.primary }}
-						/>
+						{showCover ? (
+							<Image
+								source={typeof props.book.thumbnailUrl === "string" ? { uri: props.book.thumbnailUrl } : props.book.thumbnailUrl}
+								variant="rounded-md"
+								style={{ width: 100, height: 140, borderWidth: 2, borderColor: colors.primary }}
+							/>
+						) : (
+							<BookCoverPlaceholder width={100} height={140} borderWidth={2} />
+						)}
 						<View className="flex-1 ml-4">
 							<Text size="title2" weight="bold">{props.book.title}</Text>
 							<Text size="body1" color="gray">{props.book.author}</Text>

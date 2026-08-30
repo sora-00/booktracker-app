@@ -7,10 +7,10 @@ import Log from "@/components/container/log/Log";
 import { Container } from "@/components/common/Container";
 
 export default function LogScreen() {
-	const { books: displayBooks, getBooks, updateBook } = useBooks();
+	const { books: displayBooks, getBooks } = useBooks();
 	const { logs: displayLogs, selectedFilter, setSelectedFilter, getLogs, addLog, updateLog, removeLog } = useLogs();
 	const logForm = useLogForm();
-	const { handleFormAdd } = useLogFormSubmit(logForm, updateBook, addLog);
+	const { handleFormAdd } = useLogFormSubmit(logForm, getBooks, addLog);
 
 	useEffect(() => {
 		getBooks();

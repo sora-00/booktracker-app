@@ -1,4 +1,5 @@
 export * from "./root";
+export * from "./entry";
 export * from "./tabs/root";
 export * from "./tabs/bookshelf";
 export * from "./tabs/log";

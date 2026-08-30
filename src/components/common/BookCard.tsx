@@ -2,11 +2,13 @@ import { View, Pressable, Alert } from "react-native";
 import { useState } from "react";
 import { Text } from "./Text";
 import { Image } from "./Image";
+import { BookCoverPlaceholder } from "./BookCoverPlaceholder";
 import { colors } from "@/constants/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { CircularProgress } from "./CircularProgress";
 import { formatDateSlash, getDateFromISO } from "@/utils/date";
 import { calculateProgress } from "@/utils/reading";
+import { hasRenderableBookCover } from "@/utils/bookCover";
 import { MenuPopup } from "./MenuPopup";
 import type { Book } from "@/types";
 
@@ -62,14 +64,14 @@ export function BookCard(props: Props) {
 				<Pressable onPress={handleCardPress} style={{ flex: 1 }}>
 					<View className="flex-1 flex-row">
 						<View className="flex items-center justify-center">
-							{props.book.thumbnailUrl ? (
+							{hasRenderableBookCover(props.book.thumbnailUrl) ? (
 								typeof props.book.thumbnailUrl === "string" ? (
 									<Image source={{ uri: props.book.thumbnailUrl }} variant="rounded-md" style={{ resizeMode: "cover", width: 90, height: 126 }} />
 								) : (
 									<Image source={props.book.thumbnailUrl} variant="rounded-md" style={{ resizeMode: "cover", width: 90, height: 126 }} />
 								)
 							) : (
-								<View className="w-13 h-16 rounded-md bg-gray-100 items-center justify-center" />
+								<BookCoverPlaceholder width={90} height={126} />
 							)}
 						</View>
 						<View className="flex-1 flex-col justify-between pl-3">

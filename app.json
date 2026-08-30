@@ -32,9 +32,6 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false
-    },
-    "web": {
-      "favicon": "./app/assets/img/favicon.png"
     }
   }
 }

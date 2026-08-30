@@ -50,7 +50,9 @@ export const getOneMonthLaterDate = (): string => {
  */
 export const formatDateSlash = (dateString: string): string => {
 	if (!dateString) return "";
-	const [year, month, day] = dateString.split("-");
+	// ISO8601 形式（YYYY-MM-DDTHH:mm:ssZ など）の場合は日付部分だけを取り出す
+	const datePart = dateString.split("T")[0];
+	const [year, month, day] = datePart.split("-");
 	return `${year}/${month}/${day}`;
 };
 

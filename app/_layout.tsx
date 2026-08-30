@@ -1,9 +1,10 @@
 import { Slot } from "expo-router";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Platform } from "react-native";
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import { useFonts } from "expo-font";
 import { PortalProvider, PortalHost } from "@gorhom/portal";
+import { AuthProvider } from "@/hooks/useAuth";
 import { initApiFetcher } from "@/repositories/cli/client";
 import { getApiBaseUrl } from "@/utils/config";
 import type { FetcherInterceptor } from "@/types";
@@ -24,25 +25,18 @@ export default function RootLayout() {
     }
   }, [fontsLoaded, fontError]);
 
-  useEffect(() => {
-    const apiBaseUrl = getApiBaseUrl();
-    const platform = Platform.OS;
-    const version = "1.0.0";
-
+  // useEffect だと子の useEffect より後に走ることがあり fetcher が未初期化になる。
+  // useLayoutEffect は子の useEffect より前に同期的に実行される。
+  useLayoutEffect(() => {
     const interceptor: FetcherInterceptor = {
-      onRequest: (req) => {
-        return req;
-      },
-      onResponse: (res) => {
-        return res;
-      },
+      onRequest: (req) => req,
+      onResponse: (res) => res,
       onError: (error: Error) => {
         console.error("API Error:", error);
         return error;
       },
     };
-
-    initApiFetcher(apiBaseUrl, platform, version, interceptor);
+    initApiFetcher(getApiBaseUrl(), Platform.OS, "1.0.0", interceptor);
   }, []);
 
   if (!fontsLoaded) {
@@ -51,16 +45,18 @@ export default function RootLayout() {
 
   return (
     <SafeAreaProvider>
-      <PortalProvider>
-        <Slot />
-        <PortalHost name="book-form" />
-        <PortalHost name="date-picker" />
-        <PortalHost name="book-log-form" />
-        <PortalHost name="book-selector" />
-        <PortalHost name="track-log-detail-modal" />
-        <PortalHost name="log-memo-modal" />
-        <PortalHost name="book-detail-modal" />
-      </PortalProvider>
+      <AuthProvider>
+        <PortalProvider>
+          <Slot />
+          <PortalHost name="book-form" />
+          <PortalHost name="date-picker" />
+          <PortalHost name="book-log-form" />
+          <PortalHost name="book-selector" />
+          <PortalHost name="track-log-detail-modal" />
+          <PortalHost name="log-memo-modal" />
+          <PortalHost name="book-detail-modal" />
+        </PortalProvider>
+      </AuthProvider>
     </SafeAreaProvider>
   );
 }

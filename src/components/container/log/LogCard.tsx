@@ -2,6 +2,7 @@ import { View, Pressable, Alert } from "react-native";
 import { useState } from "react";
 import { Text } from "@/components/common/Text";
 import { Image } from "@/components/common/Image";
+import { BookCoverPlaceholder } from "@/components/common/BookCoverPlaceholder";
 import { colors } from "@/constants/colors";
 import { formatDateSlash } from "@/utils/date";
 import { useOverlay } from "@/hooks/useOverlay";
@@ -9,6 +10,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { MenuPopup } from "@/components/common/MenuPopup";
 import { MemoModal } from "./MemoModal";
 import type { Log, Book } from "@/types";
+import { hasRenderableBookCover } from "@/utils/bookCover";
 
 type Props = {
 	log: Log;
@@ -40,14 +42,14 @@ export function LogCard(props: Props) {
 			<View className="flex-col py-3 px-4 rounded-xl shadow-sm w-full relative bg-white">
 				<View className="flex-row items-start ">
 					<View className="flex items-center justify-center">
-						{props.book.thumbnailUrl ? (
+						{hasRenderableBookCover(props.book.thumbnailUrl) ? (
 							typeof props.book.thumbnailUrl === "string" ? (
 								<Image source={{ uri: props.book.thumbnailUrl }} variant="rounded-md" style={{ resizeMode: "cover", width: 50, height: 70 }} />
 							) : (
 								<Image source={props.book.thumbnailUrl} variant="rounded-md" style={{ resizeMode: "cover", width: 50, height: 70 }} />
 							)
 						) : (
-							<View className="w-[50px] h-[70px] rounded-md bg-gray-100 items-center justify-center" />
+							<BookCoverPlaceholder width={50} height={70} />
 						)}
 					</View>
 					<View className="flex-1 flex-col justify-between pl-3">

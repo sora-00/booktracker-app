@@ -17,7 +17,6 @@ export type {
 	LogResp,
 	GetBookListOptions,
 	GetLogListOptions,
-	BookThumbnailUploadResponse,
 } from "./repository";
 
 // UI

@@ -10,15 +10,16 @@ type LogFormState = {
 	resetForm: () => void;
 };
 
-type UpdateBookFn = (id: number, input: { readPages?: number }) => Promise<string>;
 type AddLogFn = (input: NewLogInput) => Promise<string>;
+type RefreshBooksFn = () => Promise<unknown>;
 
 /**
- * 読書ログフォームの送信（addLog + updateBook + リセット）
+ * 読書ログフォームの送信（addLog + 本一覧リフレッシュ + リセット）。
+ * readPages の更新はサーバーが自動で行うため、別途 updateBook を呼ぶ必要はない。
  */
 export function useLogFormSubmit(
 	form: LogFormState,
-	updateBook: UpdateBookFn,
+	refreshBooks: RefreshBooksFn,
 	addLog: AddLogFn
 ) {
 	const handleFormAdd = useCallback(async () => {
@@ -48,14 +49,10 @@ export function useLogFormSubmit(
 			return;
 		}
 
-		const updateBookError = await updateBook(selectedBook.id, { readPages: endPageNum });
-		if (updateBookError) {
-			console.error("bookの更新に失敗しました:", updateBookError);
-			return;
-		}
-
+		// ログ追加後にサーバー側の最新 readPages を反映させるため本一覧を再取得する
+		await refreshBooks();
 		resetForm();
-	}, [form, updateBook, addLog]);
+	}, [form, refreshBooks, addLog]);
 
 	return { handleFormAdd };
 }
